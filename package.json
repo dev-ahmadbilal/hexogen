@@ -1,6 +1,6 @@
 {
   "name": "hexogen",
-  "version": "1.5.0",
+  "version": "1.0.0",
   "description": "A CLI tool for generating hexagonal architecture modules in NestJS applications using Hygen templates",
   "main": "bin/hexogen.js",
   "bin": {

@@ -327,20 +327,6 @@ function getAvailableGenerators() {
     generators.push(...versionTemplates.map(template => `generate-version/${template}`));
   }
   
-  // Check seeds directory
-  const seedsDir = path.join(__dirname, '..', 'templates', 'seeds');
-  if (fs.existsSync(seedsDir)) {
-    const seedsTemplates = fs.readdirSync(seedsDir).filter((f) => fs.statSync(path.join(seedsDir, f)).isDirectory());
-    generators.push(...seedsTemplates.map(template => `seeds/${template}`));
-  }
-  
-  // Check query directory
-  const queryDir = path.join(__dirname, '..', 'templates', 'query');
-  if (fs.existsSync(queryDir)) {
-    const queryTemplates = fs.readdirSync(queryDir).filter((f) => fs.statSync(path.join(queryDir, f)).isDirectory());
-    generators.push(...queryTemplates.map(template => `query/${template}`));
-  }
-  
   return generators;
 }
 
@@ -382,12 +368,6 @@ program
     } else if (generator.startsWith('generate-version/')) {
       console.log(chalk.blue(`Generating ${generator}`));
       hygenArgs = ['generate-version', generator.split('/')[1]];
-    } else if (generator.startsWith('seeds/')) {
-      console.log(chalk.blue(`Generating ${generator}`));
-      hygenArgs = ['seeds', generator.split('/')[1]];
-    } else if (generator.startsWith('query/')) {
-      console.log(chalk.blue(`Generating ${generator}`));
-      hygenArgs = ['query', generator.split('/')[1]];
     } else {
       console.log(chalk.blue(`Generating ${generator}`));
       hygenArgs = ['generate', generator];
@@ -444,8 +424,6 @@ program
     console.log('  $ hexogen resource --no-prettier');
     console.log('  $ hexogen subentity');
     console.log('  $ hexogen versioned');
-    console.log('  $ hexogen seed');
-    console.log('  $ hexogen query');
     console.log('  $ hexogen add property');
     console.log('  $ hexogen list templates');
     console.log('  $ hexogen help');
@@ -541,48 +519,6 @@ program
     }
     console.log(chalk.blue(`Generating versioned resource`));
     const hygenArgs = ['generate-version', 'add-to-relational-resource'];
-    const env = {};
-    if (options.schema) {
-      const fullSchemaPath = path.resolve(process.cwd(), options.schema);
-      env.SCHEMA_FILE = fullSchemaPath;
-      hygenArgs.push('--schema', fullSchemaPath);
-    }
-    env.SKIP_PRETTIER = options.prettier === false ? 'true' : 'false';
-    runHygen(hygenArgs, env);
-  });
-
-program
-  .command('seed')
-  .description('Generate a seed module (e.g. hexogen seed)')
-  .option('-s, --schema <path>', 'Path to schema JSON file (e.g. --schema ./schemas/user.json)')
-  .option('--no-prettier', 'Skip Prettier formatting after generation')
-  .action((options) => {
-    if (options.schema && !validateSchemaFile(options.schema)) {
-      process.exit(1);
-    }
-    console.log(chalk.blue(`Generating seed module`));
-    const hygenArgs = ['seeds', 'create-relational'];
-    const env = {};
-    if (options.schema) {
-      const fullSchemaPath = path.resolve(process.cwd(), options.schema);
-      env.SCHEMA_FILE = fullSchemaPath;
-      hygenArgs.push('--schema', fullSchemaPath);
-    }
-    env.SKIP_PRETTIER = options.prettier === false ? 'true' : 'false';
-    runHygen(hygenArgs, env);
-  });
-
-program
-  .command('query')
-  .description('Generate a query module (e.g. hexogen query)')
-  .option('-s, --schema <path>', 'Path to schema JSON file (e.g. --schema ./schemas/user.json)')
-  .option('--no-prettier', 'Skip Prettier formatting after generation')
-  .action((options) => {
-    if (options.schema && !validateSchemaFile(options.schema)) {
-      process.exit(1);
-    }
-    console.log(chalk.blue(`Generating query module`));
-    const hygenArgs = ['query', 'add-to-relational-resource'];
     const env = {};
     if (options.schema) {
       const fullSchemaPath = path.resolve(process.cwd(), options.schema);
