@@ -207,6 +207,7 @@ function runHygen(args, env = {}) {
   // Get the package directory (where hexogen is installed)
   const packageDir = path.join(__dirname, '..');
   const templatesPath = path.join(packageDir, 'templates');
+  const helperPath = path.join(packageDir, 'hygen-helper.js');
   
   // Set environment variables to ensure Hygen uses our templates
   const hygenEnv = {
@@ -216,6 +217,8 @@ function runHygen(args, env = {}) {
     HYGEN_TMPLS_DIR: templatesPath,
     // Force Hygen to use our templates
     HYGEN_TMPLS_FORCE: 'true',
+    // Add hexogen package directory for script access
+    HEXOGEN_PACKAGE_DIR: packageDir,
   };
   
   // Merge with any additional env vars passed in
@@ -231,19 +234,24 @@ function runHygen(args, env = {}) {
   const originalHygenConfig = fs.existsSync(tempHygenConfig) ? fs.readFileSync(tempHygenConfig, 'utf8') : null;
   
   try {
-    // Write our own .hygen.js configuration
-    fs.writeFileSync(tempHygenConfig, `module.exports = {
-  templates: "${templatesPath.replace(/\\/g, '\\\\')}"
-};`);
+    // Write our own .hygen.js configuration with helpers
+    const normalizedHelperPath = helperPath.replace(/\\/g, '/');
+    const normalizedTemplatesPath = templatesPath.replace(/\\/g, '/');
     
-    const hygenProcess = spawn('npx', ['hygen', ...args], {
-      stdio: 'inherit',
+    fs.writeFileSync(tempHygenConfig, `const helpers = require('${normalizedHelperPath}');
+module.exports = {
+  helpers,
+  templates: '${normalizedTemplatesPath}'
+};`);
+  
+  const hygenProcess = spawn('npx', ['hygen', ...args], {
+    stdio: 'inherit',
       env: hygenEnv,
       // Set cwd to the current working directory (where the user is running the command)
       cwd: process.cwd(),
-    });
-    
-    hygenProcess.on('close', (code) => {
+  });
+  
+  hygenProcess.on('close', (code) => {
       // Restore original .hygen.js if it existed
       if (originalHygenConfig) {
         fs.writeFileSync(tempHygenConfig, originalHygenConfig);
@@ -251,8 +259,8 @@ function runHygen(args, env = {}) {
         fs.unlinkSync(tempHygenConfig);
       }
       
-      if (code === 0) {
-        console.log(chalk.green('✔ Success!'));
+    if (code === 0) {
+      console.log(chalk.green('✔ Success!'));
         
         // Copy common files after successful generation
         copyCommonFiles();
@@ -270,16 +278,16 @@ function runHygen(args, env = {}) {
               targetDir = `src/${folderName}/`;
             }
           }
-          runPrettier(targetDir);
+      runPrettier(targetDir);
         } else {
           console.log(chalk.gray('⏭️  Skipping Prettier formatting'));
         }
-      } else {
-        console.log(chalk.red('✖ Hygen failed with code ' + code));
-      }
-    });
-    
-    hygenProcess.on('error', (err) => {
+    } else {
+      console.log(chalk.red('✖ Hygen failed with code ' + code));
+    }
+  });
+  
+  hygenProcess.on('error', (err) => {
       // Restore original .hygen.js if it existed
       if (originalHygenConfig) {
         fs.writeFileSync(tempHygenConfig, originalHygenConfig);
@@ -287,9 +295,9 @@ function runHygen(args, env = {}) {
         fs.unlinkSync(tempHygenConfig);
       }
       
-      console.error(chalk.red('Failed to start hygen process:'), err);
-      process.exit(1);
-    });
+    console.error(chalk.red('Failed to start hygen process:'), err);
+    process.exit(1);
+  });
   } catch (error) {
     console.error(chalk.red('Failed to create temporary hygen config:'), error);
     process.exit(1);
@@ -400,16 +408,16 @@ program
   });
 
 program
-  .command('add property <module> <property>')
-  .description('Add a property to a module (e.g. hexogen add property user name:string)')
-  .action((module, property) => {
+  .command('add property')
+  .description('Add a property to a module (e.g. hexogen add property)')
+  .action(() => {
     const available = getAvailablePropertyTemplates();
     if (!available.includes('add-to-relational')) {
       console.log(chalk.red('Property template "add-to-relational" not found.'));
       process.exit(1);
     }
-    console.log(chalk.blue(`Adding property '${property}' to module '${module}'`));
-    runHygen(['property', 'add-to-relational', '--module', module, '--property', property]);
+    console.log(chalk.blue(`Adding property to module`));
+    runHygen(['property', 'add-to-relational']);
   });
 
 program
@@ -438,7 +446,7 @@ program
     console.log('  $ hexogen versioned');
     console.log('  $ hexogen seed');
     console.log('  $ hexogen query');
-    console.log('  $ hexogen add property user name:string');
+    console.log('  $ hexogen add property');
     console.log('  $ hexogen list templates');
     console.log('  $ hexogen help');
     program.help();
@@ -596,4 +604,4 @@ if (process.argv.length <= 2) {
   program.help();
 }
 
-program.parse(process.argv);
+program.parse(process.argv); 

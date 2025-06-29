@@ -2,15 +2,15 @@
 to: "<%= isAddTestCase ? `src/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}/${version}/__mock__/${h.inflection.transform(name, ['underscore', 'dasherize'])}.mock.${version}.ts` : null %>"
 ---
 <% if (functionalities.includes('findAll')) { %>
-import { IPaginationOptions } from '../../../../common/types/pagination-options';
+import { IPaginationOptions } from '../../../common/types/pagination-options';
 <% } %>
 <% if (functionalities.includes('create')) { %>
-import { Create<%= name %>Dto<%= version.toUpperCase() %> } from '../../../../../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/<%= version %>/dto/create-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto.<%= version %>';
+import { Create<%= name %>Dto<%= version.toUpperCase() %> } from '../dto/create-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto.<%= version %>';
 <% } %>
 <% if (functionalities.includes('update')) { %>
-import { Update<%= name %>Dto<%= version.toUpperCase() %> } from '../../../../../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/<%= version %>/dto/update-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto.<%= version %>';
+import { Update<%= name %>Dto<%= version.toUpperCase() %> } from '../dto/update-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto.<%= version %>';
 <% } %>
-import { <%= name %><%= version.toUpperCase() %> } from '../../../../../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/<%= version %>/domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.<%= version %>';
+import { <%= name %><%= version.toUpperCase() %> } from '../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.<%= version %>';
 // __mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock.ts
 <% if (functionalities.includes('findAll')) { %>
 export const paginationOptions: IPaginationOptions = {
