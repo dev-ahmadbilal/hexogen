@@ -1,0 +1,60 @@
+{
+  "name": "hexogen",
+  "version": "1.5.0",
+  "description": "A CLI tool for generating hexagonal architecture modules in NestJS applications using Hygen templates",
+  "main": "bin/hexogen.js",
+  "bin": {
+    "hexogen": "./bin/hexogen.js"
+  },
+  "files": [
+    "bin/",
+    "templates/",
+    "common/"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:verbose": "jest --verbose",
+    "test:quick": "node bin/hexogen.js list templates",
+    "test:generate": "node bin/hexogen.js g relational-resource TestResource"
+  },
+  "keywords": [
+    "cli",
+    "nestjs",
+    "hexagonal-architecture",
+    "hygen",
+    "generator",
+    "scaffolding"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "hygen": "^6.2.11"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "peerDependencies": {
+    "prettier": ">=2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "prettier": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "postinstall": "echo 'Use hexogen g <template> <name> to generate modules'"
+}
