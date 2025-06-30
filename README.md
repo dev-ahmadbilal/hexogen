@@ -1,4 +1,6 @@
-# Hexogen
+# Hexogen — Hexagonal Module Generator for NestJS
+
+> Let your NestJS app speak the language of hexagonal architecture — effortlessly.
 
 A CLI tool for generating hexagonal architecture modules in NestJS applications using Hygen templates.
 
@@ -216,6 +218,131 @@ hexogen subentity SubItem --schema ./schemas/subitem.json
 # Generate a versioned resource
 hexogen versioned User
 hexogen versioned User --schema ./schemas/user.json
+```
+
+### Using JSON Schema Files
+
+To avoid interactive prompts, you can provide a JSON schema file using the `--schema` option. This allows for automated generation and CI/CD integration.
+
+📖 **[Learn how to generate schemas using AI tools →](docs/schema-generation.md)**
+
+#### Resource Schema Format
+
+Create a JSON file (e.g., `user-schema.json`) with the following structure:
+
+```json
+{
+  "name": "Sample",
+  "isAddTestCase": true,
+  "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+  "fields": [
+    {
+      "name": "first_name",
+      "optional": false,
+      "type": "varchar",
+      "customType": "",
+      "example": "John",
+      "dto": true
+    },
+    {
+      "name": "age",
+      "optional": true,
+      "type": "int",
+      "customType": "",
+      "example": "30",
+      "dto": true
+    },
+    {
+      "name": "metadata",
+      "optional": true,
+      "type": "json",
+      "customType": "",
+      "example": "{\"role\": \"admin\"}",
+      "dto": false
+    },
+    {
+      "name": "custom_flag",
+      "optional": false,
+      "type": "boolean",
+      "customType": "",
+      "example": "true",
+      "dto": true
+    }
+  ]
+}
+```
+
+**Schema Fields:**
+- `name`: The resource name (e.g., "User", "Product")
+- `isAddTestCase`: Whether to generate test files (true/false)
+- `functionalities`: Array of CRUD operations to generate (create, findAll, findOne, update, delete)
+- `fields`: Array of entity properties
+
+**Field Properties:**
+- `name`: Property name (e.g., "first_name", "age")
+- `optional`: Whether the field is optional (true/false)
+- `type`: Database type (varchar, int, boolean, json, etc.)
+- `customType`: Custom TypeScript type (leave empty for standard types)
+- `example`: Example value for Swagger documentation
+- `dto`: Whether to include this field in DTOs (true/false)
+
+#### Sub-Entity Schema Format
+
+Create a JSON file (e.g., `subitem-schema.json`) with the following structure:
+
+```json
+{
+  "parent": "User",
+  "name": "SampleSub",
+  "fields": [
+    {
+      "name": "first_name",
+      "optional": false,
+      "type": "varchar",
+      "customType": "",
+      "example": "John"
+    },
+    { 
+      "name": "age",
+      "optional": true,
+      "type": "int",
+      "customType": "",
+      "example": "30"
+    },
+    {
+      "name": "metadata",
+      "optional": true,
+      "type": "json",
+      "customType": "",
+      "example": "{\"role\": \"admin\"}"
+    },
+    {
+      "name": "custom_flag",
+      "optional": false,
+      "type": "boolean",
+      "customType": "",
+      "example": "true"
+    }
+  ]
+}
+```
+
+**Schema Fields:**
+- `parent`: The parent resource name (e.g., "User")
+- `name`: The sub-entity name (e.g., "Address", "Profile")
+- `fields`: Array of entity properties (same structure as resource fields, but without the `dto` property)
+
+**Usage Examples:**
+
+```bash
+# Generate resource from schema
+hexogen resource --schema ./schemas/user.json
+
+# Generate sub-entity from schema
+hexogen subentity --schema ./schemas/address.json
+
+# Generate without prettier formatting
+hexogen resource --schema ./schemas/product.json --no-prettier
 ```
 
 ### Add a Property to a Module
