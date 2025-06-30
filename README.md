@@ -261,9 +261,7 @@ Generate entire hexagonal architecture modules with a single command. Includes c
 
 **Usage:**
 ```bash
-hexogen generate resource User
-# or with shortcut
-hexogen g resource User
+hexogen resource User
 ```
 
 ### 📝 **Interactive Property Addition**
@@ -279,7 +277,7 @@ Create sub-entities within existing modules, maintaining proper hexagonal archit
 
 **Usage:**
 ```bash
-hexogen generate sub-entity
+hexogen subentity
 ```
 
 ### 📊 **Versioned Resource Support**
@@ -287,7 +285,7 @@ Generate versioned resources with proper API versioning structure, including ver
 
 **Usage:**
 ```bash
-hexogen generate versioned
+hexogen versioned
 ```
 
 ### 🎯 **Schema-Driven Generation**
@@ -295,7 +293,7 @@ Generate modules from JSON schema files, automatically creating all necessary fi
 
 **Usage:**
 ```bash
-hexogen generate resource --schema user-schema.json
+hexogen resource --schema user-schema.json
 ```
 
 ### 🔧 **TypeORM Integration**
@@ -324,85 +322,11 @@ View all available templates and their descriptions to understand what can be ge
 hexogen list
 ```
 
-### 🎯 **Shortcut Commands**
-Quick access to common commands with intuitive shortcuts:
-- `hexogen g` → `hexogen generate`
-- `hexogen g resource` → `hexogen generate resource`
-- `hexogen g sub-entity` → `hexogen generate sub-entity`
-- `hexogen g versioned` → `hexogen generate versioned`
-
 ### 🔍 **Interactive Prompts**
 All commands use interactive prompts when parameters are missing, making the tool user-friendly and intuitive.
 
 ### 🛡️ **Error Handling**
 Robust error handling with graceful fallbacks for missing dependencies like Prettier.
-
-## Common Utilities
-
-Hexogen automatically copies essential utility files to your project's `src/common/` directory:
-
-### 📁 **Copied Files:**
-- `src/common/types/pagination-options.ts` - Pagination interface
-- `src/common/dto/pagination-response.dto.ts` - Pagination response DTOs
-- `src/common/dto/infinity-pagination-response.dto.ts` - Infinity pagination DTOs
-- `src/common/infinity-pagination.ts` - Infinity pagination utility function
-
-### 🔄 **Automatic Import Updates:**
-All generated templates now import pagination utilities from the local `src/common/` directory:
-
-```typescript
-// Generated imports use local common folder
-import { IPaginationOptions } from '../../../common/types/pagination-options';
-import { PaginationResponseDto } from '../../../common/dto/pagination-response.dto';
-```
-
-### ✅ **Benefits:**
-- **No external dependencies** - All utilities are self-contained
-- **Consistent across projects** - Same pagination structure everywhere
-- **Automatic setup** - No manual file copying required
-- **Version control friendly** - Utilities are part of your project
-
-## Import Strategy
-
-Hexogen generates files with **relative path imports** instead of absolute paths (like `@src/`). This approach provides several benefits:
-
-### ✅ **Advantages of Relative Paths:**
-- **Project-agnostic**: Works with any project structure
-- **No configuration dependency**: Doesn't require specific path aliases
-- **Flexible**: Projects can use their preferred import strategy
-- **Linter-friendly**: ESLint and Prettier can easily convert to absolute paths if configured
-
-### 🔄 **Automatic Conversion:**
-If your project uses absolute path imports (e.g., `@src/`), you can configure your linter to automatically convert relative imports to absolute paths:
-
-**ESLint configuration:**
-```json
-{
-  "rules": {
-    "import/no-relative-parent-imports": "error"
-  }
-}
-```
-
-**Prettier + TypeScript:**
-```json
-{
-  "importOrder": ["^@src/(.*)$", "^[./]"],
-  "importOrderSeparation": true
-}
-```
-
-### 📁 **Generated Import Examples:**
-```typescript
-// Instead of: import { UserService } from '@src/users/users.service';
-// Generated:  import { UserService } from './users.service';
-
-// Instead of: import { User } from '@src/users/domain/user';
-// Generated:  import { User } from './domain/user';
-
-// Instead of: import { TABLES } from '@src/common/constants';
-// Generated:  import { TABLES } from '../../../common/constants';
-```
 
 ## Installation
 
@@ -437,6 +361,7 @@ hexogen resource User
 #### **Simplified Commands (Recommended)**
 ```bash
 # Generate a main resource
+hexogen resource
 hexogen resource User
 hexogen resource User --schema ./schemas/user.json
 hexogen resource User --no-prettier
@@ -449,21 +374,6 @@ hexogen subentity SubItem --schema ./schemas/subitem.json
 hexogen versioned User
 hexogen versioned User --schema ./schemas/user.json
 ```
-
-#### **Legacy Commands (Still Supported)**
-```bash
-hexogen g <generator> <name>
-# Examples:
-hexogen g relational-resource User
-hexogen g generate-sub-entity/relational-resource SubItem
-hexogen g generate-version/add-to-relational-resource User
-hexogen g relational-resource User --schema ./schemas/user.json
-hexogen g relational-resource User --no-prettier
-```
-
-**Options:**
-- `-s, --schema <path>`: Path to schema JSON file for entity definition
-- `--no-prettier`: Skip Prettier formatting after generation (useful for large projects)
 
 ### Add a Property to a Module
 
@@ -485,39 +395,22 @@ hexogen list templates
 hexogen help
 ```
 
+**Options:**
+- `-s, --schema <path>`: Path to schema JSON file for entity definition
+- `--no-prettier`: Skip Prettier formatting after generation (useful for large projects)
+
+
 ### Error Handling
 - If you specify an unknown generator or property template, the CLI will show available options.
 - All commands provide clear success/failure messages.
-
-## Troubleshooting
-
-### "I can't find action 'relational-resource' for generator 'generate'"
-
-This error occurs when Hygen tries to use local templates instead of the package templates. This has been fixed in the latest version. If you're still experiencing issues:
-
-1. Make sure you're using the latest version: `npm update -g hexogen`
-2. Try running the command from a different directory
-3. Check that there's no local `.hygen` directory or `.hygen.js` file in your project
-
-### Templates Not Found
-
-If you get template-related errors:
-
-1. Verify the installation: `hexogen list templates`
-2. Reinstall the package: `npm uninstall -g hexogen && npm install -g hexogen`
-3. Check that you're not in a directory with conflicting Hygen configuration
 
 ## Supported Templates
 
 **Generators:**
 - relational-resource
 - generate-sub-entity/relational-resource
+- property/add-to-relational
 - generate-version/add-to-relational-resource
-
-**Property Templates:**
-- add-to-relational
-
-> You can add your own templates under the `templates/` directory. The CLI will automatically detect them.
 
 ## Project Structure
 
@@ -546,6 +439,175 @@ hexogen/
 4. Create `index.js` for generator logic
 5. The CLI will auto-detect new templates
 
+## Custom Templates
+
+Hexogen supports custom templates, allowing you to create your own generators and property templates. Custom templates are automatically detected and can be used alongside built-in templates.
+
+### Creating Custom Templates
+
+Create a `templates/` directory in your project root with the following structure:
+
+```
+templates/
+├── generate/              # Custom generators
+│   └── my-generator/
+│       ├── index.js
+│       ├── prompt.js
+│       └── template.ejs.t
+├── generate-sub-entity/   # Custom sub-entity generators
+│   └── my-sub-generator/
+├── generate-version/      # Custom version generators
+│   └── my-version-generator/
+├── property/             # Custom property templates
+│   └── my-property-template/
+├── test/                 # Custom test generators
+│   ├── unit-test/
+│   └── integration-test/
+├── migration/            # Custom migration generators
+│   ├── create-table/
+│   └── add-column/
+├── docs/                 # Custom documentation generators
+│   └── api-docs/
+└── init/                 # Custom project initialization
+    └── setup-project/
+```
+
+### Using Custom Templates
+
+**Custom Generators:**
+```bash
+# List all available templates (including custom ones)
+hexogen list templates
+
+# List all template types
+hexogen list types
+
+# Use a custom generator
+hexogen g custom:my-generator
+
+# Use a custom sub-entity generator
+hexogen g custom:generate-sub-entity/my-sub-generator
+
+# Use a custom version generator
+hexogen g custom:generate-version/my-version-generator
+
+# Use any other custom template type
+hexogen g custom:test/unit-test
+hexogen g custom:migration/create-table
+hexogen g custom:docs/api-docs
+hexogen g custom:init/setup-project
+```
+
+**Custom Property Templates:**
+```bash
+# Add property using custom template
+hexogen add property
+# The CLI will show available templates and let you choose
+```
+
+### Template Structure
+
+Each custom template should follow the Hygen template structure:
+
+**For Generators (`templates/generate/my-generator/`):**
+- `index.js` - Main generator logic
+- `prompt.js` - User input prompts
+- `template.ejs.t` - Template files (can be multiple)
+
+**For Property Templates (`templates/property/my-property-template/`):**
+- `index.js` - Property addition logic
+- `prompt.js` - Property input prompts
+- Template files for different property types
+
+### Example Custom Generator
+
+Create `templates/generate/simple-crud/index.js`:
+```javascript
+module.exports = {
+  prompt: ({ inquirer }) => {
+    const questions = [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is the entity name?',
+      },
+    ];
+    return inquirer.prompt(questions);
+  },
+  params: ({ args, h }) => {
+    return {
+      name: h.changeCase.pascal(args.name),
+      namePlural: h.changeCase.pascal(h.inflection.pluralize(args.name)),
+    };
+  },
+};
+```
+
+Create `templates/generate/simple-crud/controller.ejs.t`:
+```typescript
+import { Controller } from '@nestjs/common';
+
+@Controller('<%= namePlural.toLowerCase() %>')
+export class <%= name %>Controller {
+  // Your custom controller logic
+}
+```
+
+### Benefits of Custom Templates
+
+- **Project-specific patterns**: Create templates that match your team's coding standards
+- **Reusable components**: Build templates for common patterns across projects
+- **Team consistency**: Share custom templates with your team
+- **Extensibility**: Add new generators without waiting for package updates
+- **Any template type**: Create templates for tests, migrations, docs, deployment, or any other project need
+- **Flexible structure**: Organize templates by type (test/, migration/, docs/, etc.) for better organization
+
+### Template Discovery
+
+Hexogen automatically discovers custom templates in the following order:
+1. Built-in templates (from the hexogen package)
+2. Custom templates (from your project's `templates/` directory)
+
+Custom templates are clearly marked as "custom" in the `hexogen list templates` output.
+
+### Example Use Cases
+
+**Test Templates:**
+```bash
+# Generate unit tests
+hexogen g custom:test/unit-test User
+
+# Generate integration tests
+hexogen g custom:test/integration-test User
+```
+
+**Migration Templates:**
+```bash
+# Generate table creation migration
+hexogen g custom:migration/create-table users
+
+# Generate column addition migration
+hexogen g custom:migration/add-column users email
+```
+
+**Documentation Templates:**
+```bash
+# Generate API documentation
+hexogen g custom:docs/api-docs User
+
+# Generate README sections
+hexogen g custom:docs/readme-section installation
+```
+
+**Project Setup Templates:**
+```bash
+# Initialize project structure
+hexogen g custom:init/setup-project
+
+# Setup CI/CD configuration
+hexogen g custom:init/ci-cd github-actions
+```
+
 ## Contributing
 
 1. Fork the repository
@@ -560,4 +622,4 @@ ISC
 
 ## Support
 
-For issues and questions, please open an issue on the GitHub repository. 
+For issues and questions, please open an issue on the GitHub repository.

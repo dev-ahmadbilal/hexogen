@@ -209,12 +209,16 @@ function runHygen(args, env = {}) {
   const templatesPath = path.join(packageDir, 'templates');
   const helperPath = path.join(packageDir, 'hygen-helper.js');
   
-  // Set environment variables to ensure Hygen uses our templates
+  // Check if we should use custom templates
+  const useCustomTemplates = env.USE_CUSTOM_TEMPLATES === 'true';
+  const customTemplatesPath = path.join(process.cwd(), 'templates');
+  
+  // Set environment variables to ensure Hygen uses the correct templates
   const hygenEnv = {
     ...process.env,
-    HYGEN_TMPLS: templatesPath,
+    HYGEN_TMPLS: useCustomTemplates ? customTemplatesPath : templatesPath,
     // Override any local .hygen.js configuration
-    HYGEN_TMPLS_DIR: templatesPath,
+    HYGEN_TMPLS_DIR: useCustomTemplates ? customTemplatesPath : templatesPath,
     // Force Hygen to use our templates
     HYGEN_TMPLS_FORCE: 'true',
     // Add hexogen package directory for script access
@@ -225,7 +229,7 @@ function runHygen(args, env = {}) {
   Object.assign(hygenEnv, env);
   
   console.log(chalk.gray('[DEBUG] Package dir:', packageDir));
-  console.log(chalk.gray('[DEBUG] Templates path:', templatesPath));
+  console.log(chalk.gray('[DEBUG] Templates path:', useCustomTemplates ? customTemplatesPath : templatesPath));
   console.log(chalk.gray('[DEBUG] HYGEN_TMPLS:', hygenEnv.HYGEN_TMPLS));
   console.log(chalk.gray('[DEBUG] Hygen env keys:', Object.keys(hygenEnv).filter(k => k.startsWith('HYGEN'))));
   
@@ -236,7 +240,7 @@ function runHygen(args, env = {}) {
   try {
     // Write our own .hygen.js configuration with helpers
     const normalizedHelperPath = helperPath.replace(/\\/g, '/');
-    const normalizedTemplatesPath = templatesPath.replace(/\\/g, '/');
+    const normalizedTemplatesPath = (useCustomTemplates ? customTemplatesPath : templatesPath).replace(/\\/g, '/');
     
     fs.writeFileSync(tempHygenConfig, `const helpers = require('${normalizedHelperPath}');
 module.exports = {
@@ -304,10 +308,35 @@ module.exports = {
   }
 }
 
+function getAllTemplateTypes() {
+  const templateTypes = [];
+  
+  // Check built-in template types in package
+  const packageTemplatesDir = path.join(__dirname, '..', 'templates');
+  if (fs.existsSync(packageTemplatesDir)) {
+    const builtInTypes = fs.readdirSync(packageTemplatesDir).filter((f) => 
+      fs.statSync(path.join(packageTemplatesDir, f)).isDirectory()
+    );
+    templateTypes.push(...builtInTypes);
+  }
+  
+  // Check custom template types in user's project
+  const customTemplatesDir = path.join(process.cwd(), 'templates');
+  if (fs.existsSync(customTemplatesDir)) {
+    const customTypes = fs.readdirSync(customTemplatesDir).filter((f) => 
+      fs.statSync(path.join(customTemplatesDir, f)).isDirectory()
+    );
+    templateTypes.push(...customTypes);
+  }
+  
+  return [...new Set(templateTypes)]; // Remove duplicates
+}
+
 function getAvailableGenerators() {
   const generators = [];
+  const templateTypes = getAllTemplateTypes();
   
-  // Check generate directory
+  // Check built-in templates in package
   if (fs.existsSync(templatesDir)) {
     const generateTemplates = fs.readdirSync(templatesDir).filter((f) => fs.statSync(path.join(templatesDir, f)).isDirectory());
     generators.push(...generateTemplates);
@@ -327,12 +356,62 @@ function getAvailableGenerators() {
     generators.push(...versionTemplates.map(template => `generate-version/${template}`));
   }
   
+  // Check custom templates in user's project
+  const customTemplatesDir = path.join(process.cwd(), 'templates', 'generate');
+  if (fs.existsSync(customTemplatesDir)) {
+    const customGenerateTemplates = fs.readdirSync(customTemplatesDir).filter((f) => fs.statSync(path.join(customTemplatesDir, f)).isDirectory());
+    generators.push(...customGenerateTemplates.map(template => `custom:${template}`));
+  }
+  
+  // Check custom generate-sub-entity directory
+  const customGenerateSubEntityDir = path.join(process.cwd(), 'templates', 'generate-sub-entity');
+  if (fs.existsSync(customGenerateSubEntityDir)) {
+    const customSubEntityTemplates = fs.readdirSync(customGenerateSubEntityDir).filter((f) => fs.statSync(path.join(customGenerateSubEntityDir, f)).isDirectory());
+    generators.push(...customSubEntityTemplates.map(template => `custom:generate-sub-entity/${template}`));
+  }
+  
+  // Check custom generate-version directory
+  const customGenerateVersionDir = path.join(process.cwd(), 'templates', 'generate-version');
+  if (fs.existsSync(customGenerateVersionDir)) {
+    const customVersionTemplates = fs.readdirSync(customGenerateVersionDir).filter((f) => fs.statSync(path.join(customGenerateVersionDir, f)).isDirectory());
+    generators.push(...customVersionTemplates.map(template => `custom:generate-version/${template}`));
+  }
+  
+  // Check all other custom template types
+  const customTemplatesRoot = path.join(process.cwd(), 'templates');
+  if (fs.existsSync(customTemplatesRoot)) {
+    const customTypes = fs.readdirSync(customTemplatesRoot).filter((f) => 
+      fs.statSync(path.join(customTemplatesRoot, f)).isDirectory() && 
+      !['generate', 'generate-sub-entity', 'generate-version', 'property'].includes(f)
+    );
+    
+    for (const type of customTypes) {
+      const typeDir = path.join(customTemplatesRoot, type);
+      const templates = fs.readdirSync(typeDir).filter((f) => fs.statSync(path.join(typeDir, f)).isDirectory());
+      generators.push(...templates.map(template => `custom:${type}/${template}`));
+    }
+  }
+  
   return generators;
 }
 
 function getAvailablePropertyTemplates() {
-  if (!fs.existsSync(propertyDir)) return [];
-  return fs.readdirSync(propertyDir).filter((f) => fs.statSync(path.join(propertyDir, f)).isDirectory());
+  const properties = [];
+  
+  // Check built-in property templates
+  if (fs.existsSync(propertyDir)) {
+    const builtInProperties = fs.readdirSync(propertyDir).filter((f) => fs.statSync(path.join(propertyDir, f)).isDirectory());
+    properties.push(...builtInProperties);
+  }
+  
+  // Check custom property templates
+  const customPropertyDir = path.join(process.cwd(), 'templates', 'property');
+  if (fs.existsSync(customPropertyDir)) {
+    const customProperties = fs.readdirSync(customPropertyDir).filter((f) => fs.statSync(path.join(customPropertyDir, f)).isDirectory());
+    properties.push(...customProperties.map(template => `custom:${template}`));
+  }
+  
+  return properties;
 }
 
 program
@@ -347,10 +426,24 @@ program
   .option('-s, --schema <path>', 'Path to schema JSON file (e.g. --schema ./schemas/user.json)')
   .option('--no-prettier', 'Skip Prettier formatting after generation')
   .action((generator, options) => {
+    // Map simplified command names to actual template names
+    const commandMappings = {
+      'resource': 'relational-resource',
+      'subentity': 'generate-sub-entity/relational-resource',
+      'versioned': 'generate-version/add-to-relational-resource'
+    };
+    
+    // If it's a simplified command, map it to the actual template
+    const actualGenerator = commandMappings[generator] || generator;
+    
     const available = getAvailableGenerators();
-    if (!available.includes(generator)) {
+    if (!available.includes(actualGenerator)) {
       console.log(chalk.red(`Unknown generator: ${generator}`));
       console.log(chalk.yellow('Available generators:'), available.join(', '));
+      console.log(chalk.gray('\n💡 You can also use simplified commands:'));
+      console.log(chalk.gray('   hexogen resource (instead of hexogen g resource)'));
+      console.log(chalk.gray('   hexogen subentity (instead of hexogen g subentity)'));
+      console.log(chalk.gray('   hexogen versioned (instead of hexogen g versioned)'));
       process.exit(1);
     }
     
@@ -361,16 +454,36 @@ program
     
     // Handle different generator types
     let hygenArgs = [];
+    let isCustomTemplate = false;
     
-    if (generator.startsWith('generate-sub-entity/')) {
-      console.log(chalk.blue(`Generating ${generator}`));
-      hygenArgs = ['generate-sub-entity', generator.split('/')[1]];
-    } else if (generator.startsWith('generate-version/')) {
-      console.log(chalk.blue(`Generating ${generator}`));
-      hygenArgs = ['generate-version', generator.split('/')[1]];
+    if (actualGenerator.startsWith('custom:')) {
+      isCustomTemplate = true;
+      const templateName = actualGenerator.replace('custom:', '');
+      
+      if (templateName.startsWith('generate-sub-entity/')) {
+        console.log(chalk.blue(`Generating custom ${templateName}`));
+        hygenArgs = ['generate-sub-entity', templateName.split('/')[1]];
+      } else if (templateName.startsWith('generate-version/')) {
+        console.log(chalk.blue(`Generating custom ${templateName}`));
+        hygenArgs = ['generate-version', templateName.split('/')[1]];
+      } else if (templateName.includes('/')) {
+        // Handle any other template type with format type/template
+        const [type, template] = templateName.split('/');
+        console.log(chalk.blue(`Generating custom ${type}/${template}`));
+        hygenArgs = [type, template];
+      } else {
+        console.log(chalk.blue(`Generating custom ${templateName}`));
+        hygenArgs = ['generate', templateName];
+      }
+    } else if (actualGenerator.startsWith('generate-sub-entity/')) {
+      console.log(chalk.blue(`Generating ${actualGenerator}`));
+      hygenArgs = ['generate-sub-entity', actualGenerator.split('/')[1]];
+    } else if (actualGenerator.startsWith('generate-version/')) {
+      console.log(chalk.blue(`Generating ${actualGenerator}`));
+      hygenArgs = ['generate-version', actualGenerator.split('/')[1]];
     } else {
-      console.log(chalk.blue(`Generating ${generator}`));
-      hygenArgs = ['generate', generator];
+      console.log(chalk.blue(`Generating ${actualGenerator}`));
+      hygenArgs = ['generate', actualGenerator];
     }
     
     // Set environment variable for schema file instead of passing as argument
@@ -384,20 +497,68 @@ program
     // Pass prettier option to runHygen
     env.SKIP_PRETTIER = options.prettier === false ? 'true' : 'false';
     
+    // Pass custom template flag to runHygen
+    env.USE_CUSTOM_TEMPLATES = isCustomTemplate ? 'true' : 'false';
+    
     runHygen(hygenArgs, env);
   });
 
 program
   .command('add property')
   .description('Add a property to a module (e.g. hexogen add property)')
-  .action(() => {
+  .action(async () => {
     const available = getAvailablePropertyTemplates();
-    if (!available.includes('add-to-relational')) {
-      console.log(chalk.red('Property template "add-to-relational" not found.'));
+    
+    if (available.length === 0) {
+      console.log(chalk.red('No property templates found.'));
       process.exit(1);
     }
-    console.log(chalk.blue(`Adding property to module`));
-    runHygen(['property', 'add-to-relational']);
+    
+    // If only one template is available, use it automatically
+    if (available.length === 1) {
+      const template = available[0];
+      const isCustom = template.startsWith('custom:');
+      const templateName = isCustom ? template.replace('custom:', '') : template;
+      
+      console.log(chalk.blue(`Using ${isCustom ? 'custom ' : ''}property template: ${templateName}`));
+      const hygenArgs = ['property', templateName];
+      const env = { USE_CUSTOM_TEMPLATES: isCustom ? 'true' : 'false' };
+      runHygen(hygenArgs, env);
+      return;
+    }
+    
+    // If multiple templates are available, let user choose
+    console.log(chalk.cyan('Available property templates:'));
+    available.forEach((template, index) => {
+      const isCustom = template.startsWith('custom:');
+      const templateName = isCustom ? template.replace('custom:', '') : template;
+      console.log(`  ${index + 1}. ${templateName}${isCustom ? ' (custom)' : ''}`);
+    });
+    
+    const selectedTemplate = await new Promise((resolve) => {
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+      rl.question('Select a template (enter number): ', (answer) => {
+        rl.close();
+        const index = parseInt(answer.trim()) - 1;
+        if (index >= 0 && index < available.length) {
+          resolve(available[index]);
+        } else {
+          console.log(chalk.red('Invalid selection.'));
+          process.exit(1);
+        }
+      });
+    });
+    
+    const isCustom = selectedTemplate.startsWith('custom:');
+    const templateName = isCustom ? selectedTemplate.replace('custom:', '') : selectedTemplate;
+    
+    console.log(chalk.blue(`Using ${isCustom ? 'custom ' : ''}property template: ${templateName}`));
+    const hygenArgs = ['property', templateName];
+    const env = { USE_CUSTOM_TEMPLATES: isCustom ? 'true' : 'false' };
+    runHygen(hygenArgs, env);
   });
 
 program
@@ -406,12 +567,86 @@ program
   .action(() => {
     const generators = getAvailableGenerators();
     const properties = getAvailablePropertyTemplates();
+    
     console.log(chalk.green('Available generators:'));
-    generators.forEach((g) => console.log('  -', g));
-    if (properties.length) {
-      console.log(chalk.green('\nAvailable property templates:'));
-      properties.forEach((p) => console.log('  -', p));
+    const builtInGenerators = generators.filter(g => !g.startsWith('custom:'));
+    const customGenerators = generators.filter(g => g.startsWith('custom:'));
+    
+    if (builtInGenerators.length > 0) {
+      console.log(chalk.cyan('  Built-in:'));
+      builtInGenerators.forEach((g) => console.log('    -', g));
     }
+    
+    if (customGenerators.length > 0) {
+      console.log(chalk.cyan('  Custom:'));
+      customGenerators.forEach((g) => {
+        const templateName = g.replace('custom:', '');
+        console.log('    -', templateName);
+      });
+    }
+    
+    if (properties.length > 0) {
+      console.log(chalk.green('\nAvailable property templates:'));
+      const builtInProperties = properties.filter(p => !p.startsWith('custom:'));
+      const customProperties = properties.filter(p => p.startsWith('custom:'));
+      
+      if (builtInProperties.length > 0) {
+        console.log(chalk.cyan('  Built-in:'));
+        builtInProperties.forEach((p) => console.log('    -', p));
+      }
+      
+      if (customProperties.length > 0) {
+        console.log(chalk.cyan('  Custom:'));
+        customProperties.forEach((p) => {
+          const templateName = p.replace('custom:', '');
+          console.log('    -', templateName);
+        });
+      }
+    }
+    
+    if (generators.length === 0 && properties.length === 0) {
+      console.log(chalk.yellow('No templates found.'));
+      console.log(chalk.gray('💡 To add custom templates, create a templates/ directory in your project:'));
+      console.log(chalk.gray('   templates/'));
+      console.log(chalk.gray('   ├── generate/'));
+      console.log(chalk.gray('   ├── generate-sub-entity/'));
+      console.log(chalk.gray('   ├── generate-version/'));
+      console.log(chalk.gray('   └── property/'));
+    }
+  });
+
+program
+  .command('list types')
+  .description('List all available template types')
+  .action(() => {
+    const templateTypes = getAllTemplateTypes();
+    
+    if (templateTypes.length === 0) {
+      console.log(chalk.yellow('No template types found.'));
+      return;
+    }
+    
+    console.log(chalk.green('Available template types:'));
+    
+    // Separate built-in and custom types
+    const builtInTypes = ['generate', 'generate-sub-entity', 'generate-version', 'property'];
+    const customTypes = templateTypes.filter(type => !builtInTypes.includes(type));
+    
+    if (builtInTypes.length > 0) {
+      console.log(chalk.cyan('  Built-in:'));
+      builtInTypes.forEach((type) => {
+        if (templateTypes.includes(type)) {
+          console.log('    -', type);
+        }
+      });
+    }
+    
+    if (customTypes.length > 0) {
+      console.log(chalk.cyan('  Custom:'));
+      customTypes.forEach((type) => console.log('    -', type));
+    }
+    
+    console.log(chalk.gray('\n💡 To create custom template types, add directories to your project\'s templates/ folder'));
   });
 
 program
@@ -419,6 +654,7 @@ program
   .description('Show help and usage examples')
   .action(() => {
     console.log(chalk.cyan('\nHexogen CLI Usage Examples:'));
+    console.log(chalk.green('\nSimplified Commands (Recommended):'));
     console.log('  $ hexogen resource');
     console.log('  $ hexogen resource --schema ./schemas/user.json');
     console.log('  $ hexogen resource --no-prettier');
@@ -426,6 +662,21 @@ program
     console.log('  $ hexogen versioned');
     console.log('  $ hexogen add property');
     console.log('  $ hexogen list templates');
+    console.log('  $ hexogen list types');
+    
+    console.log(chalk.green('\nAdvanced Commands (For Power Users):'));
+    console.log('  $ hexogen g resource');
+    console.log('  $ hexogen g subentity');
+    console.log('  $ hexogen g versioned');
+    console.log('  $ hexogen g custom:my-generator');
+    console.log('  $ hexogen g custom:test/unit-test');
+    console.log('  $ hexogen g custom:migration/create-table');
+    
+    console.log(chalk.green('\nCustom Templates:'));
+    console.log('  $ hexogen g custom:query/add-to-relational-resource');
+    console.log('  $ hexogen g custom:test/unit-test User');
+    console.log('  $ hexogen g custom:migration/create-table users');
+    
     console.log('  $ hexogen help');
     program.help();
   });
