@@ -16,6 +16,7 @@ To contribute code, follow these steps:
    Click on the "Fork" button at the top right of this repository to create a copy of the project under your GitHub account.
 
 2. **Clone Your Fork:**
+
    ```bash
    git clone https://github.com/dev-ahmadbilal/hexogen.git
    cd hexogen
@@ -23,6 +24,7 @@ To contribute code, follow these steps:
 
 3. **Create a Branch:**
    Create a new branch for your changes. Use a descriptive name for the branch.
+
    ```bash
    git checkout -b your-feature-branch
    ```
@@ -30,10 +32,11 @@ To contribute code, follow these steps:
 4. Make Your Changes:
 
    Implement your changes or additions. Make sure to follow the existing code style and add tests if applicable.
-   
+
 5. Commit Your Changes:
 
-   Stage and commit your changes with a clear and concise commit message. We are following conventional commits. 
+   Stage and commit your changes with a clear and concise commit message. We are following conventional commits.
+
    ```bash
    git add .
    git commit -m "feat(scope): add a descriptive message for your changes"
@@ -41,6 +44,7 @@ To contribute code, follow these steps:
 
 6. Push Your Branch:
    Push your branch to your forked repository.
+
    ```bash
    git push origin your-feature-branch
    ```
@@ -49,13 +53,17 @@ To contribute code, follow these steps:
    Go to the Pull Requests section of the main repository and click "New Pull Request." Select your branch and provide a clear description of your changes. Submit the pull request for review. You can check our [Pull Request Template](./.github/PULL_REQUEST_TEMPLATE.md).
 
 ### 3. Code of Conduct
-   Please adhere to our Code of Conduct while participating in discussions or contributing to the project. Treat everyone with respect and kindness.
+
+Please adhere to our Code of Conduct while participating in discussions or contributing to the project. Treat everyone with respect and kindness.
 
 ### 4. Contribution Guidelines
-   - **Code Quality:** Ensure that your code is well-written, follows the project’s coding standards, and passes all existing and new tests.
-   - **Documentation:** Update the documentation if your changes affect the library’s usage or APIs.
-   Testing: Add or update tests to cover your changes. Make sure all tests pass before submitting your pull request.
+
+- **Code Quality:** Ensure that your code is well-written, follows the project’s coding standards, and passes all existing and new tests.
+- **Documentation:** Update the documentation if your changes affect the library’s usage or APIs.
+  Testing: Add or update tests to cover your changes. Make sure all tests pass before submitting your pull request.
+
 ### 5. License
+
 By contributing to this project, you agree that your contributions will be licensed under the [MIT License](LICENSE).
 
 Thank you for helping us make hexogen better!

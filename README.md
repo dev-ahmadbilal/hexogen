@@ -11,12 +11,14 @@ Hexagonal Architecture (also known as Ports and Adapters) is a powerful architec
 ## Perfect For
 
 ### 🎓 **Junior Developers**
+
 - **Learn by doing**: Generate proper hexagonal architecture without needing to understand all the concepts upfront
 - **Best practices built-in**: All generated code follows industry standards and patterns
 - **Gradual learning**: Start with generated code and gradually understand the architecture as you work with it
 - **No architectural decisions**: Focus on business logic while the tool handles the structure
 
 ### 🚀 **Developers Who Want Good Architecture Without Complexity**
+
 - **Simple setup**: No complex boilerplates with overwhelming configurations
 - **Minimal learning curve**: Get started immediately without weeks of setup and configuration
 - **Clean foundation**: Start with a clean NestJS project and add hexagonal architecture as needed
@@ -24,6 +26,7 @@ Hexagonal Architecture (also known as Ports and Adapters) is a powerful architec
 - **Gradual adoption**: Add architectural patterns incrementally as your project grows
 
 ### 🏗️ **Teams Starting New Projects**
+
 - **Consistent structure**: Everyone follows the same patterns from day one
 - **Scalable foundation**: Start simple and scale up as your application grows
 - **Reduced setup time**: Get from zero to production-ready architecture in minutes, not days
@@ -59,6 +62,7 @@ For a complete setup example with all prerequisites configured, check out our de
 **[nestjs-hexogen-starter](https://github.com/dev-ahmadbilal/nestjs-hexogen-starter)** - A complete NestJS project with all required dependencies pre-configured, ready to use with hexogen for hexagonal architecture generation.
 
 This starter project includes:
+
 - ✅ NestJS with TypeORM configuration
 - ✅ Swagger/OpenAPI setup
 - ✅ Class-validator and class-transformer
@@ -78,75 +82,95 @@ Hexogen generates code following **Hexagonal Architecture** (also known as Ports
 Hexogen provides a comprehensive set of features to make hexagonal architecture implementation seamless and efficient:
 
 ### 🚀 **Complete Module Generation**
+
 Generate entire hexagonal architecture modules with a single command. Includes controllers, services, repositories, DTOs, entities, mappers, and modules following NestJS best practices.
 
 **Usage:**
+
 ```bash
 hexogen resource User
 ```
 
 ### 📝 **Interactive Property Addition**
+
 Add new properties to existing modules with interactive prompts. Automatically updates DTOs, entities, and mappers across all layers.
 
 **Usage:**
+
 ```bash
 hexogen property
 ```
 
 ### 🔄 **Sub-Entity Generation**
+
 Create sub-entities within existing modules, maintaining proper hexagonal architecture structure and relationships.
 
 **Usage:**
+
 ```bash
 hexogen subentity SubItem
 ```
 
 ### 📊 **Versioned Resource Support**
+
 Generate versioned resources with proper API versioning structure, including version-specific controllers and DTOs.
 
 **Usage:**
+
 ```bash
 hexogen versioned User
 ```
 
 ### 🎯 **Schema-Driven Generation**
+
 Generate modules from JSON schema files, automatically creating all necessary files based on your data model.
 
 **Usage:**
+
 ```bash
 hexogen resource --schema user-schema.json
 ```
 
 ### 🔧 **TypeORM Integration**
+
 Built-in support for TypeORM with proper entity definitions, repository patterns, and database integration.
 
 ### 📚 **Swagger/OpenAPI Ready**
+
 All generated DTOs include Swagger decorators for automatic API documentation generation.
 
 ### ✅ **Validation Pipes**
+
 Generated DTOs include comprehensive validation using class-validator decorators.
 
 ### 🎨 **Automatic Prettier Formatting**
+
 All generated files are automatically formatted using Prettier for consistent code style.
 
 ### 🔗 **Relative Path Imports**
+
 No dependency on project path configuration - all imports use relative paths for better portability.
 
 ### 📦 **Common Utilities**
+
 Automatic copying of pagination utilities and common DTOs to your project for consistent patterns.
 
 ### 📋 **Template Listing**
+
 View all available templates and their descriptions to understand what can be generated.
 
 **Usage:**
+
 ```bash
 hexogen list templates
 ```
 
 ### 🔍 **Interactive Prompts**
+
 All commands use interactive prompts when parameters are missing, making the tool user-friendly and intuitive.
 
 ### 🛡️ **Error Handling**
+
 Robust error handling with graceful fallbacks for missing dependencies like Prettier.
 
 ## Installation
@@ -213,16 +237,19 @@ hexogen help
 ```
 
 **Options:**
+
 - `-s, --schema <path>`: Path to schema JSON file for entity definition
 - `--no-prettier`: Skip Prettier formatting after generation (useful for large projects)
 
 ### Error Handling
+
 - All commands provide clear success/failure messages.
 - Interactive prompts guide you through the process when parameters are missing.
 
 ## Supported Templates
 
 **Available Templates:**
+
 - resource
 - subentity
 - versioned

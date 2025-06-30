@@ -30,6 +30,7 @@ Given that many applications involve third-party integrations, hexagonal archite
 2. **Improved Testability and Reliability**: Abstracting third-party services makes it easier to create mock versions, leading to more reliable and faster testing.
 
 ## Practical Benefits of Hexagonal Architecture
+
 Hexagonal Architecture is not just a theoretical pattern—it brings real, practical value to your day-to-day development work. Below are a few tangible benefits based on real-world scenarios:
 
 ### 1. Pre-defined Structure - No Architectural Decisions
@@ -43,6 +44,7 @@ This standardization saves cognitive effort and promotes developer productivity 
 Suppose you have written a TypeORM-based query in repository layer and built some business logic in the service layer on top of that. In the longer run, you decide to replace this complex TypeOrm query with a raw query for performance:
 
 With hexagonal architecture:
+
 - Your business logic remains intact
 - You only need to update the repository implementation and the mappers
 - No changes required in the service layer
@@ -51,6 +53,7 @@ With hexagonal architecture:
 This is a classic example of continuous improvement. Without this architecture, you would have to update both the repository layer implementation and then modify the business logic to accommodate the new response structure.
 
 ### 3. Payment Module Example - Platform Abstraction
+
 Use Case: You're building an in-app purchase module. You can organize it like this:
 
 ```
@@ -75,6 +78,7 @@ payment/
 ```
 
 In this setup:
+
 - Your business logic in `payment.service.ts` interacts only with the payment port interface. It has no concern about any specific payment platform
 - Platform-specific details (Google, Apple, Huawei) are encapsulated in their own adapters.
 - If you need to replace a payment platform or its API changes, in the future, you just update that specific adapter and mapper
@@ -172,6 +176,7 @@ While hexagonal architecture provides significant benefits, there are some consi
 **Initial Complexity**: Hexagonal Architecture can take more effort to implement initially, but it provides more flexibility and scalability in the long run. You can still use Three-tier architecture, but we recommend using Hexagonal Architecture. Try to create resources via our [CLI](../README.md#usage) - you'll find it takes the same time (maybe even less 🤔) as Three-tier architecture.
 
 **Code Generation Limitations**: While we have integrated Hygen for code generation, it has its own limitations. For example:
+
 - You can't add relations between two entities through Hygen terminal or command line
 - Complex customizations may require manual intervention
 
@@ -179,4 +184,4 @@ While hexagonal architecture provides significant benefits, there are some consi
 
 📘 For improving AI effectiveness in large codebases, refer to the official Cursor documentation: [https://docs.cursor.com/guides/advanced/large-codebases](https://docs.cursor.com/guides/advanced/large-codebases)
 
-**Minor Edit Overhead**: Sometimes minor edits in modules can take longer due to the need to update multiple layers (domain, mappers, adapters), though this is offset by the long-term maintainability benefits. 
+**Minor Edit Overhead**: Sometimes minor edits in modules can take longer due to the need to update multiple layers (domain, mappers, adapters), though this is offset by the long-term maintainability benefits.

@@ -1,4 +1,4 @@
-name: "CodeQL"
+name: 'CodeQL'
 
 permissions:
   security-events: write
@@ -12,8 +12,8 @@ on:
     # The branches below must be a subset of the branches above
     branches: [main]
   schedule:
-    - cron: "36 7 * * 6"
+    - cron: '36 7 * * 6'
 
 jobs:
   analyze:
-    uses:  dev-ahmadbilal/reuseble-workflows/.github/workflows/codeql-analysis.yml@main
+    uses: dev-ahmadbilal/reuseble-workflows/.github/workflows/codeql-analysis.yml@main

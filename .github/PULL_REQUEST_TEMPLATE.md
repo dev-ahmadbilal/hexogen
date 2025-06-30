@@ -9,6 +9,7 @@ Fixes #0000.
 ## How Has This Been Tested?
 
 This change has been tested by:
+
 1. Running `npm run test` to ensure all unit tests pass.
 2. Performing manual testing in [testing environment] to verify the behavior.
 3. [If applicable] Running integration tests to ensure no regressions were introduced.

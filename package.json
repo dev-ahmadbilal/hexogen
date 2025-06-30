@@ -85,4 +85,4 @@
     "url": ""
   },
   "postinstall": "echo 'Use hexogen g <template> <name> to generate modules'"
-} 
+}
