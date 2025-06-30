@@ -5,6 +5,7 @@ Hexogen supports JSON schema files to avoid interactive prompts and enable autom
 ## Overview
 
 Instead of manually creating JSON schema files, you can use AI tools to automatically generate them from:
+
 - SQL `CREATE TABLE` statements
 - Natural language descriptions of your entities
 - Existing database schemas
@@ -16,6 +17,7 @@ This approach saves time and ensures consistency across your project.
 ### Step 1: Prepare Your Input
 
 Gather one of the following:
+
 - A SQL `CREATE TABLE` statement
 - A natural language description of your entity and its fields
 - An existing database table definition
@@ -38,7 +40,7 @@ I will provide one of the following:
 - A raw SQL `CREATE TABLE` statement
 - A natural language description of a data entity and its fields
 
-You will extract the schema and create a JSON object matching the exact structure below. Skip the fields id, created_at, and updated_at as they will be added automatically. 
+You will extract the schema and create a JSON object matching the exact structure below. Skip the fields id, created_at, and updated_at as they will be added automatically.
 
 Ensure the entity name is converted to PascalCase (capitalize the first letter of each word, no underscores or spaces). For example, tempuser becomes TempUser, product_order becomes ProductOrder.
 
@@ -120,6 +122,7 @@ hexogen resource --schema schemas/<entity-name-kebab-case>.json
 ### Example 1: SQL CREATE TABLE Statement
 
 **Input:**
+
 ```sql
 CREATE TABLE user_profiles (
     id SERIAL PRIMARY KEY,
@@ -137,6 +140,7 @@ CREATE TABLE user_profiles (
 ```
 
 **Expected Output Schema:**
+
 ```json
 {
   "name": "UserProfile",
@@ -214,6 +218,7 @@ CREATE TABLE user_profiles (
 ### Example 2: Natural Language Description
 
 **Input:**
+
 ```
 Create a Product entity with the following fields:
 - name (required, varchar)
@@ -226,6 +231,7 @@ Create a Product entity with the following fields:
 ```
 
 **Expected Output Schema:**
+
 ```json
 {
   "name": "Product",
@@ -296,51 +302,56 @@ Create a Product entity with the following fields:
 
 The following field types are supported in the schema:
 
-| Type | Description | Example |
-|------|-------------|---------|
-| `int` | Integer values | `123` |
-| `float` | Floating point numbers | `3.14` |
-| `double` | Double precision floating point | `3.14159265359` |
-| `decimal` | Decimal numbers (for currency) | `999.99` |
-| `boolean` | True/false values | `true` |
-| `varchar` | Variable length strings | `"Hello World"` |
-| `text` | Long text content | `"Long description..."` |
-| `uuid` | UUID/GUID values | `"550e8400-e29b-41d4-a716-446655440000"` |
-| `timestamp` | Date and time | `"2023-12-25T10:30:00Z"` |
-| `date` | Date only | `"2023-12-25"` |
-| `json` | JSON objects or arrays | `{"key": "value"}` |
-| `custom` | Custom TypeScript types | Requires `customType` field |
+| Type        | Description                     | Example                                  |
+| ----------- | ------------------------------- | ---------------------------------------- |
+| `int`       | Integer values                  | `123`                                    |
+| `float`     | Floating point numbers          | `3.14`                                   |
+| `double`    | Double precision floating point | `3.14159265359`                          |
+| `decimal`   | Decimal numbers (for currency)  | `999.99`                                 |
+| `boolean`   | True/false values               | `true`                                   |
+| `varchar`   | Variable length strings         | `"Hello World"`                          |
+| `text`      | Long text content               | `"Long description..."`                  |
+| `uuid`      | UUID/GUID values                | `"550e8400-e29b-41d4-a716-446655440000"` |
+| `timestamp` | Date and time                   | `"2023-12-25T10:30:00Z"`                 |
+| `date`      | Date only                       | `"2023-12-25"`                           |
+| `json`      | JSON objects or arrays          | `{"key": "value"}`                       |
+| `custom`    | Custom TypeScript types         | Requires `customType` field              |
 
 ## Schema Field Properties
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `name` | string | Yes | Field name in snake_case |
-| `type` | string | Yes | One of the supported types above |
-| `optional` | boolean | Yes | Whether the field is nullable/optional |
-| `customType` | string | No | Custom TypeScript type (for `custom` type) |
-| `example` | string | Yes | Example value for Swagger documentation |
-| `dto` | boolean | Yes | Whether to include in DTOs |
+| Property     | Type    | Required | Description                                |
+| ------------ | ------- | -------- | ------------------------------------------ |
+| `name`       | string  | Yes      | Field name in snake_case                   |
+| `type`       | string  | Yes      | One of the supported types above           |
+| `optional`   | boolean | Yes      | Whether the field is nullable/optional     |
+| `customType` | string  | No       | Custom TypeScript type (for `custom` type) |
+| `example`    | string  | Yes      | Example value for Swagger documentation    |
+| `dto`        | boolean | Yes      | Whether to include in DTOs                 |
 
 ## Tips for Better Schema Generation
 
 ### 1. **Use Descriptive Field Names**
+
 - The AI will convert them to appropriate naming conventions
 - Be specific about the field purpose
 
 ### 2. **Include Constraints**
+
 - Mention if fields are required, unique, or have specific formats
 - Specify default values when relevant
 
 ### 3. **Provide Meaningful Examples**
+
 - Include realistic sample data
 - Help the AI understand the field purpose and format
 
 ### 4. **Be Specific About Types**
+
 - Use precise data types for better code generation
 - Consider the database and application requirements
 
 ### 5. **Consider DTO Inclusion**
+
 - Set `dto: false` for sensitive fields (passwords, tokens)
 - Set `dto: false` for computed or internal fields
 
@@ -396,6 +407,7 @@ hexogen subentity --schema schemas/address.json
 ### Validation
 
 After generation, verify that:
+
 - Entity name is in PascalCase
 - Field names are in snake_case
 - All field types are supported
@@ -405,6 +417,7 @@ After generation, verify that:
 ## Next Steps
 
 Once you have your schema file:
+
 1. Review the generated schema for accuracy
 2. Run the hexogen command to generate your resource
 3. Check the generated files and adjust as needed

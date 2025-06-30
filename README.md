@@ -273,12 +273,14 @@ Create a JSON file (e.g., `user-schema.json`) with the following structure:
 ```
 
 **Schema Fields:**
+
 - `name`: The resource name (e.g., "User", "Product")
 - `isAddTestCase`: Whether to generate test files (true/false)
 - `functionalities`: Array of CRUD operations to generate (create, findAll, findOne, update, delete)
 - `fields`: Array of entity properties
 
 **Field Properties:**
+
 - `name`: Property name (e.g., "first_name", "age")
 - `optional`: Whether the field is optional (true/false)
 - `type`: Database type (varchar, int, boolean, json, etc.)
@@ -302,7 +304,7 @@ Create a JSON file (e.g., `subitem-schema.json`) with the following structure:
       "customType": "",
       "example": "John"
     },
-    { 
+    {
       "name": "age",
       "optional": true,
       "type": "int",
@@ -328,6 +330,7 @@ Create a JSON file (e.g., `subitem-schema.json`) with the following structure:
 ```
 
 **Schema Fields:**
+
 - `parent`: The parent resource name (e.g., "User")
 - `name`: The sub-entity name (e.g., "Address", "Profile")
 - `fields`: Array of entity properties (same structure as resource fields, but without the `dto` property)
