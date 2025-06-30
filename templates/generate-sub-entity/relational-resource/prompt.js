@@ -14,14 +14,14 @@ module.exports = async (args, prompter) => {
         parent: parsed.parent,
         name: parsed.name,
         fields: Array.isArray(parsed.fields)
-          ? parsed.fields.map(field => ({
+          ? parsed.fields.map((field) => ({
               name: field.name,
               type: field.type,
               optional: field.optional,
               customType: field.customType,
               example: field.example,
             }))
-          : []
+          : [],
       };
 
       console.log('\n📦 Using entity definition from file:', schemaFilePath);

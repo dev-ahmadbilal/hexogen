@@ -7,13 +7,7 @@ const cwd = process.cwd();
 const isV2 = version === 'v2';
 
 // Define source and target directories
-const sourceDir = path.join(
-  cwd,
-  'src',
-  name,
-  isV2 ? '' : `v${parseInt(version.slice(1)) - 1}`,
-  'domain',
-);
+const sourceDir = path.join(cwd, 'src', name, isV2 ? '' : `v${parseInt(version.slice(1)) - 1}`, 'domain');
 const targetDir = path.join(cwd, 'src', name, version, 'domain');
 
 try {
@@ -32,9 +26,7 @@ try {
   files.forEach((file) => {
     const oldFilePath = path.join(targetDir, file);
     const baseName = path.basename(file, '.ts');
-    const newFileName = isV2
-      ? `${baseName}.v2.ts`
-      : `${baseName.replace(/\.[vV]\d+$/, '')}.${version}.ts`;
+    const newFileName = isV2 ? `${baseName}.v2.ts` : `${baseName.replace(/\.[vV]\d+$/, '')}.${version}.ts`;
 
     const newFilePath = path.join(targetDir, newFileName);
 
@@ -43,10 +35,7 @@ try {
     // Read, update class name, and rewrite file content
     const classSuffix = isV2 ? 'V2' : version.toUpperCase();
     let content = fs.readFileSync(newFilePath, 'utf8');
-    content = content.replace(
-      /export class ([A-Za-z0-9_]+?)(V\d+)?\b/,
-      `export class $1${classSuffix}`,
-    );
+    content = content.replace(/export class ([A-Za-z0-9_]+?)(V\d+)?\b/, `export class $1${classSuffix}`);
     fs.writeFileSync(newFilePath, content, 'utf8');
   });
 } catch (error) {

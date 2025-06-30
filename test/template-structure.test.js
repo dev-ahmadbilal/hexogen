@@ -20,7 +20,7 @@ describe('Hexogen Template Structure', () => {
     test('should have relational-resource template', () => {
       const relationalResourceDir = path.join(generateDir, 'relational-resource');
       expect(fs.existsSync(relationalResourceDir)).toBe(true);
-      
+
       // Check for essential template files
       expect(fs.existsSync(path.join(relationalResourceDir, 'controller.ejs.t'))).toBe(true);
       expect(fs.existsSync(path.join(relationalResourceDir, 'service.ejs.t'))).toBe(true);
@@ -47,31 +47,31 @@ describe('Hexogen Template Structure', () => {
     test('should have infrastructure template structure', () => {
       const infrastructureDir = path.join(generateDir, 'relational-resource', 'infrastructure');
       expect(fs.existsSync(infrastructureDir)).toBe(true);
-      
+
       const persistenceDir = path.join(infrastructureDir, 'persistence');
       expect(fs.existsSync(persistenceDir)).toBe(true);
-      
+
       const relationalDir = path.join(persistenceDir, 'relational');
       expect(fs.existsSync(relationalDir)).toBe(true);
-      
+
       // Check entities
       const entitiesDir = path.join(relationalDir, 'entities');
       expect(fs.existsSync(entitiesDir)).toBe(true);
       expect(fs.existsSync(path.join(entitiesDir, 'entity.ejs.t'))).toBe(true);
-      
+
       // Check mappers
       const mappersDir = path.join(relationalDir, 'mappers');
       expect(fs.existsSync(mappersDir)).toBe(true);
       expect(fs.existsSync(path.join(mappersDir, 'mapper.ejs.t'))).toBe(true);
-      
+
       // Check repositories
       const repositoriesDir = path.join(relationalDir, 'repositories');
       expect(fs.existsSync(repositoriesDir)).toBe(true);
       expect(fs.existsSync(path.join(repositoriesDir, 'repository.ejs.t'))).toBe(true);
-      
+
       // Check relational persistence module
       expect(fs.existsSync(path.join(relationalDir, 'relational-persistence.module.ejs.t'))).toBe(true);
-      
+
       // Check abstract repository
       expect(fs.existsSync(path.join(persistenceDir, 'abstract.repository.ejs.t'))).toBe(true);
     });
@@ -106,29 +106,29 @@ describe('Hexogen Template Structure', () => {
     test('should have sub-entity infrastructure templates', () => {
       const infrastructureDir = path.join(generateSubEntityDir, 'relational-resource', 'infrastructure');
       expect(fs.existsSync(infrastructureDir)).toBe(true);
-      
+
       const persistenceDir = path.join(infrastructureDir, 'persistence');
       expect(fs.existsSync(persistenceDir)).toBe(true);
-      
+
       const relationalDir = path.join(persistenceDir, 'relational');
       expect(fs.existsSync(relationalDir)).toBe(true);
-      
+
       // Check entities
       const entitiesDir = path.join(relationalDir, 'entities');
       expect(fs.existsSync(entitiesDir)).toBe(true);
       expect(fs.existsSync(path.join(entitiesDir, 'entity.ejs.t'))).toBe(true);
-      
+
       // Check mappers
       const mappersDir = path.join(relationalDir, 'mappers');
       expect(fs.existsSync(mappersDir)).toBe(true);
       expect(fs.existsSync(path.join(mappersDir, 'mapper.ejs.t'))).toBe(true);
-      
+
       // Check repositories
       const repositoriesDir = path.join(relationalDir, 'repositories');
       expect(fs.existsSync(repositoriesDir)).toBe(true);
       expect(fs.existsSync(path.join(repositoriesDir, 'repository-import.ejs.t'))).toBe(true);
       expect(fs.existsSync(path.join(repositoriesDir, 'repository.injection.ejs.t'))).toBe(true);
-      
+
       // Check relational persistence module
       expect(fs.existsSync(path.join(relationalDir, 'relational-persistence.module-import.ejs.t'))).toBe(true);
       expect(fs.existsSync(path.join(relationalDir, 'relational-persistence.module-injection.ejs.t'))).toBe(true);
@@ -175,33 +175,38 @@ describe('Hexogen Template Structure', () => {
     });
 
     test('should have version infrastructure templates', () => {
-      const infrastructureDir = path.join(generateVersionDir, 'add-to-relational-resource', 'version', 'infrastructure');
+      const infrastructureDir = path.join(
+        generateVersionDir,
+        'add-to-relational-resource',
+        'version',
+        'infrastructure',
+      );
       expect(fs.existsSync(infrastructureDir)).toBe(true);
-      
+
       const persistenceDir = path.join(infrastructureDir, 'persistence');
       expect(fs.existsSync(persistenceDir)).toBe(true);
-      
+
       const relationalDir = path.join(persistenceDir, 'relational');
       expect(fs.existsSync(relationalDir)).toBe(true);
-      
+
       // Check entities
       const entitiesDir = path.join(relationalDir, 'entities');
       expect(fs.existsSync(entitiesDir)).toBe(true);
       expect(fs.existsSync(path.join(entitiesDir, 'entity.ejs.t'))).toBe(true);
-      
+
       // Check mappers
       const mappersDir = path.join(relationalDir, 'mappers');
       expect(fs.existsSync(mappersDir)).toBe(true);
       expect(fs.existsSync(path.join(mappersDir, 'mapper.ejs.t'))).toBe(true);
-      
+
       // Check repositories
       const repositoriesDir = path.join(relationalDir, 'repositories');
       expect(fs.existsSync(repositoriesDir)).toBe(true);
       expect(fs.existsSync(path.join(repositoriesDir, 'repository.ejs.t'))).toBe(true);
-      
+
       // Check relational persistence module
       expect(fs.existsSync(path.join(relationalDir, 'relational-persistence.module.ejs.t'))).toBe(true);
-      
+
       // Check abstract repository
       expect(fs.existsSync(path.join(persistenceDir, 'abstract.repository.ejs.t'))).toBe(true);
     });
@@ -229,7 +234,7 @@ describe('Hexogen Template Structure', () => {
     test('should have property DTO templates', () => {
       const dtoDir = path.join(propertyDir, 'add-to-relational', 'dto');
       expect(fs.existsSync(dtoDir)).toBe(true);
-      
+
       // Check various DTO templates
       expect(fs.existsSync(path.join(dtoDir, '01-create.dto.ejs.t'))).toBe(true);
       expect(fs.existsSync(path.join(dtoDir, '02-create-import-class-validator.dto.ejs.t'))).toBe(true);
@@ -245,19 +250,19 @@ describe('Hexogen Template Structure', () => {
     test('should have property infrastructure templates', () => {
       const infrastructureDir = path.join(propertyDir, 'add-to-relational', 'infrastructure');
       expect(fs.existsSync(infrastructureDir)).toBe(true);
-      
+
       const persistenceDir = path.join(infrastructureDir, 'persistence');
       expect(fs.existsSync(persistenceDir)).toBe(true);
-      
+
       const relationalDir = path.join(persistenceDir, 'relational');
       expect(fs.existsSync(relationalDir)).toBe(true);
-      
+
       // Check entities
       const entitiesDir = path.join(relationalDir, 'entities');
       expect(fs.existsSync(entitiesDir)).toBe(true);
       expect(fs.existsSync(path.join(entitiesDir, 'entity.ejs.t'))).toBe(true);
       expect(fs.existsSync(path.join(entitiesDir, 'entity-column.ejs.t'))).toBe(true);
-      
+
       // Check mappers
       const mappersDir = path.join(relationalDir, 'mappers');
       expect(fs.existsSync(mappersDir)).toBe(true);
@@ -277,7 +282,7 @@ describe('Hexogen Template Structure', () => {
   describe('Template Content Validation', () => {
     test('should have valid EJS template syntax', () => {
       const templateFiles = [];
-      
+
       // Collect all .ejs.t files
       const walkDir = (dir) => {
         if (!fs.existsSync(dir)) return;
@@ -292,20 +297,20 @@ describe('Hexogen Template Structure', () => {
           }
         }
       };
-      
+
       walkDir(templatesDir);
-      
+
       // Check that we have template files
       expect(templateFiles.length).toBeGreaterThan(0);
-      
+
       // Check a few key templates for basic EJS syntax
       const keyTemplates = [
         path.join(generateDir, 'relational-resource', 'controller.ejs.t'),
         path.join(generateDir, 'relational-resource', 'service.ejs.t'),
-        path.join(generateDir, 'relational-resource', 'module.ejs.t')
+        path.join(generateDir, 'relational-resource', 'module.ejs.t'),
       ];
-      
-      keyTemplates.forEach(templatePath => {
+
+      keyTemplates.forEach((templatePath) => {
         if (fs.existsSync(templatePath)) {
           const content = fs.readFileSync(templatePath, 'utf8');
           expect(content).toContain('<%');
@@ -318,10 +323,10 @@ describe('Hexogen Template Structure', () => {
       const promptFiles = [
         path.join(generateDir, 'relational-resource', 'prompt.js'),
         path.join(generateSubEntityDir, 'relational-resource', 'prompt.js'),
-        path.join(generateVersionDir, 'add-to-relational-resource', 'prompt.js')
+        path.join(generateVersionDir, 'add-to-relational-resource', 'prompt.js'),
       ];
-      
-      promptFiles.forEach(promptPath => {
+
+      promptFiles.forEach((promptPath) => {
         if (fs.existsSync(promptPath)) {
           const content = fs.readFileSync(promptPath, 'utf8');
           expect(content).toContain('module.exports');
@@ -334,10 +339,10 @@ describe('Hexogen Template Structure', () => {
         path.join(generateDir, 'relational-resource', 'index.js'),
         path.join(generateSubEntityDir, 'relational-resource', 'index.js'),
         path.join(generateVersionDir, 'add-to-relational-resource', 'version', 'index.js'),
-        path.join(propertyDir, 'add-to-relational', 'index.js')
+        path.join(propertyDir, 'add-to-relational', 'index.js'),
       ];
-      
-      indexFiles.forEach(indexPath => {
+
+      indexFiles.forEach((indexPath) => {
         if (fs.existsSync(indexPath)) {
           const content = fs.readFileSync(indexPath, 'utf8');
           expect(content).toContain('module.exports');
@@ -345,4 +350,4 @@ describe('Hexogen Template Structure', () => {
       });
     });
   });
-}); 
+});

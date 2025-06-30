@@ -17,7 +17,14 @@
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose",
     "test:quick": "node bin/hexogen.js list templates",
-    "test:generate": "node bin/hexogen.js g relational-resource TestResource"
+    "test:generate": "node bin/hexogen.js g relational-resource TestResource",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build": "echo 'No build step required for CLI tool'",
+    "prepare": "husky install",
+    "release": "semantic-release"
   },
   "keywords": [
     "cli",
@@ -27,15 +34,40 @@
     "generator",
     "scaffolding"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Ahmad Bilal",
+    "email": "ahmadbilal.3491@gmail.com",
+    "url": "https://github.com/dev-ahmadbilal"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dev-ahmadbilal/hexogen/issues"
+  },
+  "homepage": "https://github.com/dev-ahmadbilal/hexogen#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "hygen": "^6.2.11"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "@babel/core": "^7.23.0",
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
+    "@eslint/js": "^8.50.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "@semantic-release/npm": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "globals": "^13.24.0",
+    "husky": "^8.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.0",
+    "semantic-release": "^21.0.0",
+    "typescript": "^5.0.0",
+    "eslint-config-prettier": "^9.0.0"
   },
   "peerDependencies": {
     "prettier": ">=2.0.0"
@@ -52,9 +84,5 @@
     "type": "git",
     "url": ""
   },
-  "bugs": {
-    "url": ""
-  },
-  "homepage": "",
   "postinstall": "echo 'Use hexogen g <template> <name> to generate modules'"
 } 

@@ -31,7 +31,7 @@ describe('Hexogen CLI Utilities', () => {
     }
     // Clean up any generated files
     const filesToClean = ['test-schema.json', 'invalid-schema.json', '.hygen.js', 'valid-schema.json'];
-    filesToClean.forEach(file => {
+    filesToClean.forEach((file) => {
       if (fs.existsSync(path.join(testDir, file))) {
         try {
           fs.unlinkSync(path.join(testDir, file));
@@ -46,7 +46,7 @@ describe('Hexogen CLI Utilities', () => {
     test('should find built-in templates', () => {
       const cliPath = path.join(__dirname, '..', 'bin', 'hexogen.js');
       const output = execSync(`node ${cliPath} list templates`, { encoding: 'utf8' });
-      
+
       // Should find the main templates
       expect(output).toContain('Available templates:');
       expect(output).toContain('- resource');
@@ -74,7 +74,7 @@ describe('Hexogen CLI Utilities', () => {
 
     test('should reject invalid JSON schema file', () => {
       fs.writeFileSync('invalid-schema.json', '{ invalid json }');
-      
+
       const cliPath = path.join(__dirname, '..', 'bin', 'hexogen.js');
       expect(() => {
         execSync(`node ${cliPath} resource TestResource --schema invalid-schema.json`, { stdio: 'pipe' });
@@ -85,11 +85,11 @@ describe('Hexogen CLI Utilities', () => {
   describe('Command Help', () => {
     test('should show help for all commands', () => {
       const cliPath = path.join(__dirname, '..', 'bin', 'hexogen.js');
-      
+
       // Test help for each command
       const commands = ['resource', 'subentity', 'versioned', 'property'];
-      
-      commands.forEach(command => {
+
+      commands.forEach((command) => {
         const output = execSync(`node ${cliPath} ${command} --help`, { encoding: 'utf8' });
         expect(output).toContain(`Usage: hexogen ${command}`);
       });
@@ -121,7 +121,7 @@ describe('Hexogen CLI Utilities', () => {
   describe('Error Handling', () => {
     test('should handle invalid command arguments', () => {
       const cliPath = path.join(__dirname, '..', 'bin', 'hexogen.js');
-      
+
       expect(() => {
         execSync(`node ${cliPath} resource --invalid-flag`, { stdio: 'pipe' });
       }).toThrow();
@@ -129,7 +129,7 @@ describe('Hexogen CLI Utilities', () => {
 
     test('should handle property command without crashing', () => {
       const cliPath = path.join(__dirname, '..', 'bin', 'hexogen.js');
-      
+
       // The property command requires user interaction, so we just test it doesn't crash
       expect(() => {
         execSync(`node ${cliPath} property`, { stdio: 'pipe' });
@@ -144,7 +144,7 @@ describe('Hexogen CLI Utilities', () => {
       const generateSubEntityDir = path.join(templatesDir, 'generate-sub-entity');
       const generateVersionDir = path.join(templatesDir, 'generate-version');
       const propertyDir = path.join(templatesDir, 'property');
-      
+
       expect(fs.existsSync(templatesDir)).toBe(true);
       expect(fs.existsSync(generateDir)).toBe(true);
       expect(fs.existsSync(generateSubEntityDir)).toBe(true);
@@ -155,7 +155,7 @@ describe('Hexogen CLI Utilities', () => {
     test('should have relational-resource template', () => {
       const relationalResourceDir = path.join(__dirname, '..', 'templates', 'generate', 'relational-resource');
       expect(fs.existsSync(relationalResourceDir)).toBe(true);
-      
+
       // Check for essential template files
       expect(fs.existsSync(path.join(relationalResourceDir, 'controller.ejs.t'))).toBe(true);
       expect(fs.existsSync(path.join(relationalResourceDir, 'service.ejs.t'))).toBe(true);
@@ -170,4 +170,4 @@ describe('Hexogen CLI Utilities', () => {
       expect(fs.existsSync(path.join(propertyDir, 'index.js'))).toBe(true);
     });
   });
-}); 
+});

@@ -32,7 +32,7 @@ const getType = (type) => {
     case 'json':
       return 'object';
     default:
-      if (customTypeMapping.hasOwnProperty(type)) {
+      if (Object.prototype.hasOwnProperty.call(customTypeMapping, type)) {
         return customTypeMapping[type];
       }
       return 'any';
@@ -75,4 +75,4 @@ const getPropertyType = (type) => {
 module.exports = {
   getType,
   getPropertyType,
-}; 
+};

@@ -2,8 +2,7 @@ module.exports = [
   {
     type: 'input',
     name: 'name',
-    message:
-      "For which existing entity are you creating a new version? (e.g. 'User')",
+    message: "For which existing entity are you creating a new version? (e.g. 'User')",
     validate: (input) => {
       if (!input.trim()) {
         return 'Please provide the name of the entity you are versioning. This cannot be empty.';

@@ -56,7 +56,7 @@ npm install reflect-metadata
 
 For a complete setup example with all prerequisites configured, check out our demo project:
 
-**[nestjs-hexogen-starter](https://github.com/your-username/nestjs-hexogen-starter)** - A complete NestJS project with all required dependencies pre-configured, ready to use with hexogen for hexagonal architecture generation.
+**[nestjs-hexogen-starter](https://github.com/dev-ahmadbilal/nestjs-hexogen-starter)** - A complete NestJS project with all required dependencies pre-configured, ready to use with hexogen for hexagonal architecture generation.
 
 This starter project includes:
 - ✅ NestJS with TypeORM configuration

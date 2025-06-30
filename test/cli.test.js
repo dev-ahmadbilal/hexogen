@@ -32,7 +32,7 @@ describe('Hexogen CLI', () => {
     }
     // Clean up any generated files
     const filesToClean = ['test-schema.json', 'invalid-schema.json', '.hygen.js'];
-    filesToClean.forEach(file => {
+    filesToClean.forEach((file) => {
       if (fs.existsSync(path.join(testDir, file))) {
         try {
           fs.unlinkSync(path.join(testDir, file));
@@ -146,4 +146,4 @@ describe('Hexogen CLI', () => {
       }).toThrow();
     });
   });
-}); 
+});

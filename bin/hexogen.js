@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* istanbul ignore file */
 
 const { Command } = require('commander');
 const { spawn } = require('child_process');
@@ -13,24 +14,24 @@ const propertyDir = path.join(__dirname, '..', 'templates', 'property');
 
 function copyCommonFiles() {
   console.log(chalk.blue(`📁 Checking for common utilities...`));
-  
+
   const packageDir = path.join(__dirname, '..');
   const commonSourceDir = path.join(packageDir, 'common');
   const targetCommonDir = path.join(process.cwd(), 'src', 'common');
-  
+
   // Check if common files exist in the package
   if (!fs.existsSync(commonSourceDir)) {
     console.log(chalk.yellow(`⚠️  Common files not found in package, skipping`));
     return;
   }
-  
+
   // Check if any generated files need pagination utilities
   const srcDir = path.join(process.cwd(), 'src');
   if (!fs.existsSync(srcDir)) {
     console.log(chalk.gray(`⏭️  No src directory found, skipping common utilities`));
     return;
   }
-  
+
   // Look for files that import pagination utilities
   let needsPagination = false;
   try {
@@ -39,7 +40,7 @@ function copyCommonFiles() {
       for (const file of files) {
         const filePath = path.join(dir, file);
         const stat = fs.statSync(filePath);
-        
+
         if (stat.isDirectory()) {
           walkDir(filePath);
         } else if (file.endsWith('.ts') && !file.includes('node_modules')) {
@@ -51,31 +52,31 @@ function copyCommonFiles() {
         }
       }
     };
-    
+
     walkDir(srcDir);
   } catch (error) {
     console.log(chalk.yellow(`⚠️  Error checking for pagination imports: ${error.message}`));
   }
-  
+
   if (!needsPagination) {
     console.log(chalk.gray(`⏭️  No pagination utilities needed, skipping`));
     return;
   }
-  
+
   try {
     // Create target directories if they don't exist
     const targetTypesDir = path.join(targetCommonDir, 'types');
     const targetDtoDir = path.join(targetCommonDir, 'dto');
-    
+
     if (!fs.existsSync(targetTypesDir)) {
       fs.mkdirSync(targetTypesDir, { recursive: true });
     }
     if (!fs.existsSync(targetDtoDir)) {
       fs.mkdirSync(targetDtoDir, { recursive: true });
     }
-    
+
     let filesCopied = 0;
-    
+
     // Copy pagination-options.ts
     const paginationOptionsSource = path.join(commonSourceDir, 'pagination-options.ts');
     const paginationOptionsTarget = path.join(targetTypesDir, 'pagination-options.ts');
@@ -86,7 +87,7 @@ function copyCommonFiles() {
     } else if (fs.existsSync(paginationOptionsTarget)) {
       console.log(chalk.gray(`  ⏭️  pagination-options.ts already exists`));
     }
-    
+
     // Copy pagination-response.dto.ts
     const paginationResponseSource = path.join(commonSourceDir, 'pagination-response.dto.ts');
     const paginationResponseTarget = path.join(targetDtoDir, 'pagination-response.dto.ts');
@@ -97,7 +98,7 @@ function copyCommonFiles() {
     } else if (fs.existsSync(paginationResponseTarget)) {
       console.log(chalk.gray(`  ⏭️  pagination-response.dto.ts already exists`));
     }
-    
+
     // Copy infinity-pagination-response.dto.ts
     const infinityPaginationResponseSource = path.join(commonSourceDir, 'infinity-pagination-response.dto.ts');
     const infinityPaginationResponseTarget = path.join(targetDtoDir, 'infinity-pagination-response.dto.ts');
@@ -108,7 +109,7 @@ function copyCommonFiles() {
     } else if (fs.existsSync(infinityPaginationResponseTarget)) {
       console.log(chalk.gray(`  ⏭️  infinity-pagination-response.dto.ts already exists`));
     }
-    
+
     // Copy infinity-pagination.ts
     const infinityPaginationSource = path.join(commonSourceDir, 'infinity-pagination.ts');
     const infinityPaginationTarget = path.join(targetCommonDir, 'infinity-pagination.ts');
@@ -119,7 +120,7 @@ function copyCommonFiles() {
     } else if (fs.existsSync(infinityPaginationTarget)) {
       console.log(chalk.gray(`  ⏭️  infinity-pagination.ts already exists`));
     }
-    
+
     if (filesCopied > 0) {
       console.log(chalk.green(`✨ Common utilities copied successfully (${filesCopied} files)`));
     } else {
@@ -133,14 +134,14 @@ function copyCommonFiles() {
 
 function runPrettier(targetDir = 'src/') {
   console.log(chalk.blue(`🧼 Running Prettier...`));
-  
+
   // Check if the target directory exists before running prettier
   const fullTargetPath = path.resolve(process.cwd(), targetDir);
   if (!fs.existsSync(fullTargetPath)) {
     console.log(chalk.yellow(`⚠️  Target directory ${targetDir} not found, skipping Prettier`));
     return;
   }
-  
+
   const prettierProcess = spawn('npx', ['prettier', '--write', targetDir], {
     stdio: 'pipe',
     cwd: process.cwd(),
@@ -181,14 +182,14 @@ function runPrettier(targetDir = 'src/') {
 
 function validateSchemaFile(schemaPath) {
   if (!schemaPath) return true;
-  
+
   const fullPath = path.resolve(process.cwd(), schemaPath);
-  
+
   if (!fs.existsSync(fullPath)) {
     console.log(chalk.red(`❌ Schema file not found: ${schemaPath}`));
     return false;
   }
-  
+
   try {
     const content = fs.readFileSync(fullPath, 'utf8');
     JSON.parse(content); // Validate JSON
@@ -206,11 +207,11 @@ function runHygen(args, env = {}) {
   const packageDir = path.join(__dirname, '..');
   const templatesPath = path.join(packageDir, 'templates');
   const helperPath = path.join(packageDir, 'hygen-helper.js');
-  
+
   // Check if we should use custom templates
   const useCustomTemplates = env.USE_CUSTOM_TEMPLATES === 'true';
   const customTemplatesPath = path.join(process.cwd(), 'templates');
-  
+
   // Set environment variables to ensure Hygen uses the correct templates
   const hygenEnv = {
     ...process.env,
@@ -222,46 +223,56 @@ function runHygen(args, env = {}) {
     // Add hexogen package directory for script access
     HEXOGEN_PACKAGE_DIR: packageDir,
   };
-  
+
   // Merge with any additional env vars passed in
   Object.assign(hygenEnv, env);
-  
+
   // Create a temporary .hygen.js file in the current directory to override any local config
   const tempHygenConfig = path.join(process.cwd(), '.hygen.js');
   const originalHygenConfig = fs.existsSync(tempHygenConfig) ? fs.readFileSync(tempHygenConfig, 'utf8') : null;
-  
+
   try {
     // Write our own .hygen.js configuration with helpers
     const normalizedHelperPath = helperPath.replace(/\\/g, '/');
     const normalizedTemplatesPath = (useCustomTemplates ? customTemplatesPath : templatesPath).replace(/\\/g, '/');
-    
-    fs.writeFileSync(tempHygenConfig, `const helpers = require('${normalizedHelperPath}');
+
+    fs.writeFileSync(
+      tempHygenConfig,
+      `const helpers = require('${normalizedHelperPath}');
 module.exports = {
   helpers,
   templates: '${normalizedTemplatesPath}'
-};`);
-  
-  const hygenProcess = spawn('npx', ['hygen', ...args], {
-    stdio: 'inherit',
+};`,
+    );
+
+    const hygenProcess = spawn('npx', ['hygen', ...args], {
+      stdio: 'inherit',
       env: hygenEnv,
       // Set cwd to the current working directory (where the user is running the command)
       cwd: process.cwd(),
-  });
-  
-  hygenProcess.on('close', (code) => {
+    });
+
+    hygenProcess.on('close', (code) => {
       // Restore original .hygen.js if it existed
       if (originalHygenConfig) {
         fs.writeFileSync(tempHygenConfig, originalHygenConfig);
       } else {
-        fs.unlinkSync(tempHygenConfig);
+        try {
+          fs.unlinkSync(tempHygenConfig);
+        } catch (error) {
+          // Ignore errors if file doesn't exist
+          if (error.code !== 'ENOENT') {
+            console.log(chalk.yellow(`⚠️  Warning: Could not clean up temporary .hygen.js: ${error.message}`));
+          }
+        }
       }
-      
-    if (code === 0) {
-      console.log(chalk.green('✔ Success!'));
-        
+
+      if (code === 0) {
+        console.log(chalk.green('✔ Success!'));
+
         // Copy common files after successful generation
         copyCommonFiles();
-        
+
         // Run Prettier after successful Hygen execution (unless disabled)
         if (env.SKIP_PRETTIER !== 'true') {
           // Determine the specific generated directory
@@ -275,26 +286,33 @@ module.exports = {
               targetDir = `src/${folderName}/`;
             }
           }
-      runPrettier(targetDir);
+          runPrettier(targetDir);
         } else {
           console.log(chalk.gray('⏭️  Skipping Prettier formatting'));
         }
-    } else {
-      console.log(chalk.red('✖ Hygen failed with code ' + code));
-    }
-  });
-  
-  hygenProcess.on('error', (err) => {
+      } else {
+        console.log(chalk.red('✖ Hygen failed with code ' + code));
+      }
+    });
+
+    hygenProcess.on('error', (err) => {
       // Restore original .hygen.js if it existed
       if (originalHygenConfig) {
         fs.writeFileSync(tempHygenConfig, originalHygenConfig);
       } else {
-        fs.unlinkSync(tempHygenConfig);
+        try {
+          fs.unlinkSync(tempHygenConfig);
+        } catch (error) {
+          // Ignore errors if file doesn't exist
+          if (error.code !== 'ENOENT') {
+            console.log(chalk.yellow(`⚠️  Warning: Could not clean up temporary .hygen.js: ${error.message}`));
+          }
+        }
       }
-      
-    console.error(chalk.red('Failed to start hygen process:'), err);
-    process.exit(1);
-  });
+
+      console.error(chalk.red('Failed to start hygen process:'), err);
+      process.exit(1);
+    });
   } catch (error) {
     console.error(chalk.red('Failed to create temporary hygen config:'), error);
     process.exit(1);
@@ -303,27 +321,33 @@ module.exports = {
 
 function getAvailableGenerators() {
   const generators = [];
-  
+
   // Check built-in templates in package only
   if (fs.existsSync(templatesDir)) {
-    const generateTemplates = fs.readdirSync(templatesDir).filter((f) => fs.statSync(path.join(templatesDir, f)).isDirectory());
+    const generateTemplates = fs
+      .readdirSync(templatesDir)
+      .filter((f) => fs.statSync(path.join(templatesDir, f)).isDirectory());
     generators.push(...generateTemplates);
   }
-  
+
   // Check generate-sub-entity directory
   const generateSubEntityDir = path.join(__dirname, '..', 'templates', 'generate-sub-entity');
   if (fs.existsSync(generateSubEntityDir)) {
-    const subEntityTemplates = fs.readdirSync(generateSubEntityDir).filter((f) => fs.statSync(path.join(generateSubEntityDir, f)).isDirectory());
-    generators.push(...subEntityTemplates.map(template => `generate-sub-entity/${template}`));
+    const subEntityTemplates = fs
+      .readdirSync(generateSubEntityDir)
+      .filter((f) => fs.statSync(path.join(generateSubEntityDir, f)).isDirectory());
+    generators.push(...subEntityTemplates.map((template) => `generate-sub-entity/${template}`));
   }
-  
+
   // Check generate-version directory
   const generateVersionDir = path.join(__dirname, '..', 'templates', 'generate-version');
   if (fs.existsSync(generateVersionDir)) {
-    const versionTemplates = fs.readdirSync(generateVersionDir).filter((f) => fs.statSync(path.join(generateVersionDir, f)).isDirectory());
-    generators.push(...versionTemplates.map(template => `generate-version/${template}`));
+    const versionTemplates = fs
+      .readdirSync(generateVersionDir)
+      .filter((f) => fs.statSync(path.join(generateVersionDir, f)).isDirectory());
+    generators.push(...versionTemplates.map((template) => `generate-version/${template}`));
   }
-  
+
   return generators;
 }
 
@@ -344,10 +368,10 @@ program
   .action(() => {
     const generators = getAvailableGenerators();
     const properties = getAvailablePropertyTemplates();
-    
+
     // Combine all templates
     const allTemplates = [...generators, ...properties];
-    
+
     console.log(chalk.green('Available templates:'));
     if (allTemplates.length > 0) {
       // Map internal template names to user-friendly names
@@ -355,9 +379,9 @@ program
         'relational-resource': 'resource',
         'generate-sub-entity/relational-resource': 'subentity',
         'generate-version/add-to-relational-resource': 'versioned',
-        'add-to-relational': 'property'
+        'add-to-relational': 'property',
       };
-      
+
       allTemplates.forEach((template) => {
         const friendlyName = templateMappings[template] || template;
         console.log('  -', friendlyName);
@@ -372,17 +396,17 @@ program
   .description('Add a property to a module (e.g. hexogen property)')
   .action(async () => {
     const available = getAvailablePropertyTemplates();
-    
+
     if (available.length === 0) {
       console.log(chalk.red('No property templates found.'));
       process.exit(1);
     }
-    
+
     // Use the first (and only) built-in property template
     const template = available[0];
     console.log(chalk.blue(`Using property template: ${template}`));
     const hygenArgs = ['property', template];
-    const env = { USE_CUSTOM_TEMPLATES: 'false' };
+    const env = { USE_CUSTOM_TEMPLATES: 'false', SKIP_PRETTIER: 'true' };
     runHygen(hygenArgs, env);
   });
 
@@ -400,7 +424,7 @@ program
     console.log('  $ hexogen property');
     console.log('  $ hexogen list templates');
     console.log('  $ hexogen help');
-    
+
     console.log(chalk.gray('\n💡 All commands support --schema and --no-prettier options'));
     program.help();
   });
@@ -533,4 +557,4 @@ if (process.argv.length <= 2) {
   program.help();
 }
 
-program.parse(process.argv); 
+program.parse(process.argv);

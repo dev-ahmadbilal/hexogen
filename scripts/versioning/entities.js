@@ -17,16 +17,7 @@ const sourceDir = path.join(
   'relational',
   'entities',
 );
-const targetDir = path.join(
-  cwd,
-  'src',
-  name,
-  version,
-  'infrastructure',
-  'persistence',
-  'relational',
-  'entities',
-);
+const targetDir = path.join(cwd, 'src', name, version, 'infrastructure', 'persistence', 'relational', 'entities');
 
 try {
   // Ensure target directory exists
@@ -46,7 +37,7 @@ try {
     const baseName = path.basename(file, '.ts');
     const newFileName = isV2
       ? `${baseName.replace(/(\.entity)?$/, '')}.v2.entity.ts`
-      : `${baseName.replace(/\.[vV]\d+\.entity$/i, '')}.${version}.entity.ts`;;
+      : `${baseName.replace(/\.[vV]\d+\.entity$/i, '')}.${version}.entity.ts`;
 
     const newFilePath = path.join(targetDir, newFileName);
 
@@ -55,10 +46,7 @@ try {
     // Read, update class name, and rewrite file content
     const classSuffix = isV2 ? 'V2' : version.toUpperCase();
     let content = fs.readFileSync(newFilePath, 'utf8');
-    content = content.replace(
-      /export class ([A-Za-z0-9_]+?)(V\d+)?\b/,
-      `export class $1${classSuffix}`,
-    );
+    content = content.replace(/export class ([A-Za-z0-9_]+?)(V\d+)?\b/, `export class $1${classSuffix}`);
     fs.writeFileSync(newFilePath, content, 'utf8');
   });
 } catch (error) {

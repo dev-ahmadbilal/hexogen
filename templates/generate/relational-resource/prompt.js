@@ -7,15 +7,13 @@ module.exports = async (args, prompter) => {
   console.error('[DEBUG] process.env.SCHEMA_FILE:', process.env.SCHEMA_FILE);
   console.error('[DEBUG] args.schema:', args.schema);
   console.error('[DEBUG] TIMESTAMP:', new Date().toISOString());
-  let schemaFilePath = process.env.SCHEMA_FILE || args.schema;
+  const schemaFilePath = process.env.SCHEMA_FILE || args.schema;
 
   // If schema file is provided and exists
   if (schemaFilePath) {
     // Fix path resolution - handle relative paths properly
-    const resolvedPath = path.isAbsolute(schemaFilePath) 
-      ? schemaFilePath 
-      : path.join(process.cwd(), schemaFilePath);
-    
+    const resolvedPath = path.isAbsolute(schemaFilePath) ? schemaFilePath : path.join(process.cwd(), schemaFilePath);
+
     if (fs.existsSync(resolvedPath)) {
       try {
         const raw = fs.readFileSync(resolvedPath, 'utf8');
@@ -26,15 +24,15 @@ module.exports = async (args, prompter) => {
           functionalities: parsed.functionalities ?? ['create', 'findAll', 'findOne', 'update', 'delete'],
           name: parsed.name,
           fields: Array.isArray(parsed.fields)
-            ? parsed.fields.map(field => ({
+            ? parsed.fields.map((field) => ({
                 name: field.name,
                 type: field.type,
                 optional: field.optional,
                 customType: field.customType,
                 example: field.example,
-                includeInDTO: field.dto
+                includeInDTO: field.dto,
               }))
-            : []
+            : [],
         };
 
         console.log('\n📦 Using entity definition from file:', schemaFilePath);
