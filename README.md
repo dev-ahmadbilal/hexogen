@@ -1,6 +1,6 @@
 # Hexogen — Hexagonal Module Generator for NestJS
 
-> Let your NestJS app speak the language of hexagonal architecture — effortlessly.
+> 🚀 **Generate enterprise-grade CRUD APIs in seconds — faster and more reliable than AI** ⚡
 
 A CLI tool for generating hexagonal architecture modules in NestJS applications using Hygen templates.
 
@@ -9,6 +9,8 @@ A CLI tool for generating hexagonal architecture modules in NestJS applications 
 Hexagonal Architecture (also known as Ports and Adapters) is a powerful architectural pattern that provides excellent separation of concerns, testability, and maintainability. However, implementing it manually requires creating many files with specific structures and patterns.
 
 **Hexogen solves this problem** by automatically generating all the boilerplate code needed for hexagonal architecture in NestJS applications. Instead of manually creating controllers, services, repositories, DTOs, entities, mappers, and modules, you can generate complete modules with a single command.
+
+> Let your NestJS app speak the language of hexagonal architecture — effortlessly.
 
 ## Perfect For
 
@@ -360,6 +362,68 @@ hexogen property
 hexogen list templates
 ```
 
+### Custom Templates
+
+Hexogen supports custom templates stored in a `.hexogen` folder in your project root. This allows you to create project-specific templates that extend the built-in functionality.
+
+#### List Custom Templates
+
+```bash
+hexogen custom:list
+```
+
+#### Run Custom Templates
+
+```bash
+# Basic usage
+hexogen custom generate/my-template
+
+# With name parameter
+hexogen custom generate/my-template --name User
+
+# With schema file
+hexogen custom generate/my-template --schema ./schemas/user.json
+
+# Skip prettier formatting
+hexogen custom generate/my-template --name User --no-prettier
+```
+
+#### Custom Template Structure
+
+Create a `.hexogen` folder in your project root with the following structure:
+
+```
+.hexogen/
+├── generate/
+│   ├── my-custom-template/
+│   │   ├── prompt.js
+│   │   └── [template files]
+│   └── another-template/
+├── property/
+│   └── custom-property/
+└── [other categories]/
+```
+
+**Template Categories:**
+- `generate/` - For generating new resources/modules
+- `property/` - For adding properties to existing modules
+- `generate-sub-entity/` - For generating sub-entities
+- `generate-version/` - For generating versioned resources
+- Any other category you prefer
+
+**Template Requirements:**
+- Each template must have a `prompt.js` file
+- Follow Hygen template structure and conventions
+- Use the same parameter names as built-in templates for consistency
+
+#### Benefits of Custom Templates
+
+- **Project-specific patterns**: Create templates tailored to your project's conventions
+- **Team consistency**: Share templates across your team
+- **Extended functionality**: Add features not available in built-in templates
+- **Version control**: Track template changes with your project
+- **Easy maintenance**: Update templates without affecting the global installation
+
 ### Show Help and Usage Examples
 
 ```bash
@@ -415,8 +479,8 @@ hexogen/
 
 ## License
 
-ISC
+MIT
 
 ## Support
 
-For issues and questions, please open an issue on the GitHub repository.
+For issues, questions and suggestions, please open an issue on the GitHub repository.

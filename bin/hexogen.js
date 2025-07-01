@@ -357,6 +357,137 @@ function getAvailablePropertyTemplates() {
   return fs.readdirSync(propertyDir).filter((f) => fs.statSync(path.join(propertyDir, f)).isDirectory());
 }
 
+function getCustomTemplates() {
+  // Look for .hexogen folder in the current working directory (user's project)
+  const customTemplatesDir = path.join(process.cwd(), '.hexogen');
+  const customTemplates = [];
+
+  if (!fs.existsSync(customTemplatesDir)) {
+    return customTemplates;
+  }
+
+  try {
+    const categories = fs.readdirSync(customTemplatesDir);
+    
+    for (const category of categories) {
+      const categoryPath = path.join(customTemplatesDir, category);
+      if (fs.statSync(categoryPath).isDirectory()) {
+        const templates = fs.readdirSync(categoryPath)
+          .filter((f) => fs.statSync(path.join(categoryPath, f)).isDirectory());
+        
+        templates.forEach((template) => {
+          customTemplates.push({
+            category,
+            name: template,
+            path: path.join(categoryPath, template),
+            fullName: `${category}/${template}`
+          });
+        });
+      }
+    }
+  } catch (error) {
+    console.log(chalk.yellow(`⚠️  Error reading custom templates: ${error.message}`));
+  }
+
+  return customTemplates;
+}
+
+function runCustomTemplate(templateName, args = []) {
+  const customTemplates = getCustomTemplates();
+  const [category, template] = templateName.split('/');
+  
+  const foundTemplate = customTemplates.find(t => 
+    t.category === category && t.name === template
+  );
+
+  if (!foundTemplate) {
+    console.log(chalk.red(`❌ Custom template not found: ${templateName}`));
+    console.log(chalk.gray('💡 Use "hexogen custom:list" to see available custom templates'));
+    console.log(chalk.gray('💡 Custom templates should be in .hexogen folder'));
+    process.exit(1);
+  }
+
+  console.log(chalk.blue(`🔧 Running custom template: ${templateName}`));
+  
+  // Set up environment for custom template
+  const customTemplatesPath = path.join(process.cwd(), '.hexogen');
+  const hygenEnv = {
+    ...process.env,
+    HYGEN_TMPLS: customTemplatesPath,
+    HYGEN_TMPLS_DIR: customTemplatesPath,
+    HYGEN_TMPLS_FORCE: 'true',
+    USE_CUSTOM_TEMPLATES: 'true',
+  };
+
+  // Create a temporary .hygen.js file to override any local config
+  const tempHygenConfig = path.join(process.cwd(), '.hygen.js');
+  const originalHygenConfig = fs.existsSync(tempHygenConfig) ? fs.readFileSync(tempHygenConfig, 'utf8') : null;
+
+  try {
+    // Write our own .hygen.js configuration for custom templates
+    const normalizedTemplatesPath = customTemplatesPath.replace(/\\/g, '/');
+    
+    fs.writeFileSync(
+      tempHygenConfig,
+      `module.exports = {
+  templates: '${normalizedTemplatesPath}'
+};`,
+    );
+
+    // Run hygen with custom template
+    const hygenArgs = [category, template, ...args];
+    const hygenProcess = spawn('npx', ['hygen', ...hygenArgs], {
+      stdio: 'inherit',
+      env: hygenEnv,
+      cwd: process.cwd(),
+    });
+
+    hygenProcess.on('close', (code) => {
+      // Restore original .hygen.js if it existed
+      if (originalHygenConfig) {
+        fs.writeFileSync(tempHygenConfig, originalHygenConfig);
+      } else {
+        try {
+          fs.unlinkSync(tempHygenConfig);
+        } catch (error) {
+          // Ignore errors if file doesn't exist
+          if (error.code !== 'ENOENT') {
+            console.log(chalk.yellow(`⚠️  Warning: Could not clean up temporary .hygen.js: ${error.message}`));
+          }
+        }
+      }
+
+      if (code === 0) {
+        console.log(chalk.green('✔ Custom template executed successfully!'));
+      } else {
+        console.log(chalk.red(`✖ Custom template failed with code ${code}`));
+      }
+    });
+
+    hygenProcess.on('error', (err) => {
+      // Restore original .hygen.js if it existed
+      if (originalHygenConfig) {
+        fs.writeFileSync(tempHygenConfig, originalHygenConfig);
+      } else {
+        try {
+          fs.unlinkSync(tempHygenConfig);
+        } catch (error) {
+          // Ignore errors if file doesn't exist
+          if (error.code !== 'ENOENT') {
+            console.log(chalk.yellow(`⚠️  Warning: Could not clean up temporary .hygen.js: ${error.message}`));
+          }
+        }
+      }
+
+      console.error(chalk.red('Failed to start custom template process:'), err);
+      process.exit(1);
+    });
+  } catch (error) {
+    console.error(chalk.red('Failed to create temporary hygen config:'), error);
+    process.exit(1);
+  }
+}
+
 program
   .name('hexogen')
   .description('A CLI tool for generating hexagonal architecture modules in NestJS applications')
@@ -392,6 +523,71 @@ program
   });
 
 program
+  .command('custom:list')
+  .description('List available custom templates from .hexogen folder')
+  .action(() => {
+    const customTemplates = getCustomTemplates();
+
+    if (customTemplates.length === 0) {
+      console.log(chalk.yellow('No custom templates found in .hexogen folder.'));
+      console.log(chalk.gray('💡 Create a .hexogen folder in your project root to add custom templates'));
+      return;
+    }
+
+    console.log(chalk.green('Available custom templates:'));
+    
+    // Group by category
+    const groupedTemplates = {};
+    customTemplates.forEach((template) => {
+      if (!groupedTemplates[template.category]) {
+        groupedTemplates[template.category] = [];
+      }
+      groupedTemplates[template.category].push(template);
+    });
+
+    Object.keys(groupedTemplates).forEach((category) => {
+      console.log(chalk.cyan(`\n  ${category}:`));
+      groupedTemplates[category].forEach((template) => {
+        console.log(`    - ${template.name}`);
+      });
+    });
+
+    console.log(chalk.gray('\n💡 Run custom templates with: hexogen custom <category>/<template> [args]'));
+  });
+
+program
+  .command('custom <template>')
+  .description('Run a custom template from .hexogen folder (e.g. hexogen custom generate/my-template)')
+  .option('--name <name>', 'Name parameter for the template')
+  .option('--schema <path>', 'Path to schema JSON file')
+  .option('--no-prettier', 'Skip Prettier formatting after generation')
+  .action(async (template, options) => {
+    if (options.schema && !validateSchemaFile(options.schema)) {
+      process.exit(1);
+    }
+
+    const args = [];
+    
+    // Add name parameter if provided
+    if (options.name) {
+      args.push('--name', options.name);
+    }
+
+    // Add schema parameter if provided
+    if (options.schema) {
+      const fullSchemaPath = path.resolve(process.cwd(), options.schema);
+      args.push('--schema', fullSchemaPath);
+    }
+
+    // Add other arguments
+    if (options.prettier === false) {
+      args.push('--no-prettier');
+    }
+
+    runCustomTemplate(template, args);
+  });
+
+program
   .command('property')
   .description('Add a property to a module (e.g. hexogen property)')
   .action(async () => {
@@ -415,7 +611,7 @@ program
   .description('Show help and usage examples')
   .action(() => {
     console.log(chalk.cyan('\nHexogen CLI Usage Examples:'));
-    console.log(chalk.green('\nCommands:'));
+    console.log(chalk.green('\nBuilt-in Commands:'));
     console.log('  $ hexogen resource User');
     console.log('  $ hexogen resource User --schema ./schemas/user.json');
     console.log('  $ hexogen resource User --no-prettier');
@@ -423,9 +619,18 @@ program
     console.log('  $ hexogen versioned User');
     console.log('  $ hexogen property');
     console.log('  $ hexogen list templates');
+    
+    console.log(chalk.green('\nCustom Template Commands:'));
+    console.log('  $ hexogen custom:list');
+    console.log('  $ hexogen custom generate/my-template');
+    console.log('  $ hexogen custom generate/my-template --name User');
+    console.log('  $ hexogen custom generate/my-template --schema ./schemas/user.json');
+    
+    console.log(chalk.green('\nUtility Commands:'));
     console.log('  $ hexogen help');
 
     console.log(chalk.gray('\n💡 All commands support --schema and --no-prettier options'));
+    console.log(chalk.gray('💡 Custom templates are stored in .hexogen folder in your project root'));
     program.help();
   });
 
