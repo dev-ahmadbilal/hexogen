@@ -1,4 +1,5 @@
 # Hexogen — Lightning-Fast CRUD API Generator (Faster & Safer Than AI)
+
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
 [![Issues][issues-img]][issues-url]
@@ -533,6 +534,7 @@ hexogen/
 Hexogen was inspired by the excellent implementation of hexagonal architecture in the **[realworld-nestjs-medium-blog](https://github.com/hhsadiq/realworld-nestjs-medium-blog)** project. This project demonstrates a complete Medium clone backend using NestJS, TypeORM, and hexagonal architecture patterns, serving as a real-world example of how these architectural principles can be applied to build production-ready APIs.
 
 The realworld-nestjs-medium-blog project showcases:
+
 - Complete CRUD operations with hexagonal architecture
 - TypeORM integration with PostgreSQL
 - Comprehensive testing (unit and E2E)
@@ -563,13 +565,13 @@ MIT
 
 For issues, questions and suggestions, please open an issue on the GitHub repository.
 
-[build-img]:https://github.com/dev-ahmadbilal/hexogen/actions/workflows/release.yml/badge.svg
-[build-url]:https://github.com/dev-ahmadbilal/hexogen/actions/workflows/release.yml
-[npm-img]:https://img.shields.io/npm/v/hexogen
-[npm-url]:https://www.npmjs.com/package/hexogen
-[issues-img]:https://img.shields.io/github/issues/dev-ahmadbilal/hexogen
-[issues-url]:https://github.com/dev-ahmadbilal/hexogen/issues
-[codecov-img]:https://codecov.io/gh/dev-ahmadbilal/hexogen/branch/main/graph/badge.svg
-[codecov-url]:https://codecov.io/gh/dev-ahmadbilal/hexogen
-[semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[semantic-release-url]:https://github.com/semantic-release/semantic-release
+[build-img]: https://github.com/dev-ahmadbilal/hexogen/actions/workflows/release.yml/badge.svg
+[build-url]: https://github.com/dev-ahmadbilal/hexogen/actions/workflows/release.yml
+[npm-img]: https://img.shields.io/npm/v/hexogen
+[npm-url]: https://www.npmjs.com/package/hexogen
+[issues-img]: https://img.shields.io/github/issues/dev-ahmadbilal/hexogen
+[issues-url]: https://github.com/dev-ahmadbilal/hexogen/issues
+[codecov-img]: https://codecov.io/gh/dev-ahmadbilal/hexogen/branch/main/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/dev-ahmadbilal/hexogen
+[semantic-release-img]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
+[semantic-release-url]: https://github.com/semantic-release/semantic-release
