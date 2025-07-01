@@ -2,8 +2,6 @@
 
 [![npm package][npm-img]][npm-url]
 [![Build Status][build-img]][build-url]
-[![Issues][issues-img]][issues-url]
-[![Code Coverage][codecov-img]][codecov-url]
 [![Semantic Release][semantic-release-img]][semantic-release-url]
 
 > 🚀 **Build CRUD APIs instantly — no hallucinations, just real code, faster and more reliable than AI** ⚡
@@ -559,7 +557,7 @@ I look forward to hearing from you!
 
 ## License
 
-MIT
+This project is licensed under [MIT](LICENSE)
 
 ## Support
 
@@ -571,7 +569,5 @@ For issues, questions and suggestions, please open an issue on the GitHub reposi
 [npm-url]: https://www.npmjs.com/package/hexogen
 [issues-img]: https://img.shields.io/github/issues/dev-ahmadbilal/hexogen
 [issues-url]: https://github.com/dev-ahmadbilal/hexogen/issues
-[codecov-img]: https://codecov.io/gh/dev-ahmadbilal/hexogen/branch/main/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/dev-ahmadbilal/hexogen
 [semantic-release-img]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
 [semantic-release-url]: https://github.com/semantic-release/semantic-release
