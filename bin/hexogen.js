@@ -612,7 +612,7 @@ program
     console.log(chalk.cyan('\nHexogen CLI Usage Examples:'));
     console.log(chalk.green('\nBuilt-in Commands:'));
     console.log('  $ hexogen resource User');
-    console.log('  $ hexogen resource User --schema ./schemas/user.json');
+    console.log('  $ hexogen resource --schema ./schemas/user.json');
     console.log('  $ hexogen resource User --no-prettier');
     console.log('  $ hexogen subentity SubItem');
     console.log('  $ hexogen versioned User');
@@ -628,7 +628,8 @@ program
     console.log(chalk.green('\nUtility Commands:'));
     console.log('  $ hexogen help');
 
-    console.log(chalk.gray('\n💡 All commands support --schema and --no-prettier options'));
+    console.log(chalk.gray('\n💡 resource and subentity commands support --schema option'));
+    console.log(chalk.gray('💡 All commands support --no-prettier option'));
     console.log(chalk.gray('💡 Custom templates are stored in .hexogen folder in your project root'));
     program.help();
   });

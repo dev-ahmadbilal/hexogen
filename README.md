@@ -1,8 +1,11 @@
 # Hexogen — Lightning-Fast CRUD API Generator (Faster & Safer Than AI)
 
 [![npm package][npm-img]][npm-url]
+[![Star][star-img]][repo-url]
 [![Build Status][build-img]][build-url]
 [![Semantic Release][semantic-release-img]][semantic-release-url]
+[![License][license-img]][license-url]
+[![PRs Welcome][pr-img]][repo-url]
 
 > 🚀 **Build CRUD APIs instantly — no hallucinations, just real code, faster and more reliable than AI** ⚡
 
@@ -275,7 +278,9 @@ hexogen subentity SubItem --schema ./schemas/subitem.json
 
 # Generate a versioned resource
 hexogen versioned User
-hexogen versioned User --schema ./schemas/user.json
+
+# Add a property to existing module
+hexogen property
 ```
 
 ### Using JSON Schema Files
@@ -557,7 +562,7 @@ I look forward to hearing from you!
 
 ## License
 
-This project is licensed under [MIT](LICENSE)
+This project is licensed under [MIT](LICENSE) © Ahmad Bilal
 
 ## Support
 
@@ -571,3 +576,8 @@ For issues, questions and suggestions, please open an issue on the GitHub reposi
 [issues-url]: https://github.com/dev-ahmadbilal/hexogen/issues
 [semantic-release-img]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
 [semantic-release-url]: https://github.com/semantic-release/semantic-release
+[star-img]: https://img.shields.io/github/stars/dev-ahmadbilal/hexogen?style=social
+[repo-url]: https://github.com/dev-ahmadbilal/hexogen
+[license-img]: https://img.shields.io/github/license/dev-ahmadbilal/hexogen
+[license-url]: https://github.com/dev-ahmadbilal/hexogen/blob/main/LICENSE
+[pr-img]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
