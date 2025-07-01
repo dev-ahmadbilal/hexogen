@@ -1,31 +1,88 @@
-# Hexogen — Hexagonal Module Generator for NestJS
+# Hexogen — Lightning-Fast CRUD API Generator (Faster & Safer Than AI)
+[![npm package][npm-img]][npm-url]
+[![Build Status][build-img]][build-url]
+[![Issues][issues-img]][issues-url]
+[![Code Coverage][codecov-img]][codecov-url]
+[![Semantic Release][semantic-release-img]][semantic-release-url]
 
-> 🚀 **Generate enterprise-grade CRUD APIs in seconds — faster and more reliable than AI** ⚡
+> 🚀 **Build CRUD APIs instantly — no hallucinations, just real code, faster and more reliable than AI** ⚡
 
-A CLI tool for generating hexagonal architecture modules in NestJS applications using Hygen templates.
+A CLI tool for generating **CRUD APIs with hexagonal architecture** in NestJS applications. Hexogen creates complete, production-ready APIs following hexagonal architecture patterns using Hygen templates.
+
+## Table of Contents
+
+- [Why Hexogen?](#why-hexogen)
+- [Perfect For](#perfect-for)
+  - [Junior Developers](#-junior-developers)
+  - [Developers Who Want Good Architecture Without Complexity](#-developers-who-want-good-architecture-without-complexity)
+  - [Teams Starting New Projects](#️-teams-starting-new-projects)
+- [Prerequisites](#prerequisites)
+  - [Required Dependencies](#required-dependencies)
+  - [Project Setup](#project-setup)
+  - [Quick Start with Demo Project](#quick-start-with-demo-project)
+- [About Hexagonal Architecture](#about-hexagonal-architecture)
+- [Features](#features)
+  - [Complete Module Generation](#-complete-module-generation)
+  - [Interactive Property Addition](#-interactive-property-addition)
+  - [Sub-Entity Generation](#-sub-entity-generation)
+  - [Versioned Resource Support](#-versioned-resource-support)
+  - [Schema-Driven Generation](#-schema-driven-generation)
+  - [TypeORM Integration](#-typeorm-integration)
+  - [Swagger/OpenAPI Ready](#-swaggeropenapi-ready)
+  - [Validation Pipes](#-validation-pipes)
+  - [Automatic Prettier Formatting](#-automatic-prettier-formatting)
+  - [Relative Path Imports](#-relative-path-imports)
+  - [Common Utilities](#-common-utilities)
+  - [Template Listing](#-template-listing)
+  - [Interactive Prompts](#-interactive-prompts)
+  - [Error Handling](#️-error-handling)
+- [Installation](#installation)
+  - [Global Installation (Recommended)](#global-installation-recommended)
+  - [Local Development](#local-development)
+- [Usage](#usage)
+  - [Generate a New Module/Resource](#generate-a-new-moduleresource)
+  - [Using JSON Schema Files](#using-json-schema-files)
+    - [Resource Schema Format](#resource-schema-format)
+    - [Sub-Entity Schema Format](#sub-entity-schema-format)
+  - [Add a Property to a Module](#add-a-property-to-a-module)
+  - [List Available Templates](#list-available-templates)
+  - [Custom Templates](#custom-templates)
+    - [List Custom Templates](#list-custom-templates)
+    - [Run Custom Templates](#run-custom-templates)
+    - [Custom Template Structure](#custom-template-structure)
+    - [Benefits of Custom Templates](#benefits-of-custom-templates)
+  - [Show Help and Usage Examples](#show-help-and-usage-examples)
+  - [Error Handling](#error-handling)
+- [Supported Templates](#supported-templates)
+- [Project Structure](#project-structure)
+- [Inspiration](#inspiration)
+- [Contributing](#contributing)
+- [Contact](#contact)
+- [License](#license)
+- [Support](#support)
 
 ## Why Hexogen?
 
-Hexagonal Architecture (also known as Ports and Adapters) is a powerful architectural pattern that provides excellent separation of concerns, testability, and maintainability. However, implementing it manually requires creating many files with specific structures and patterns.
+Building CRUD APIs with proper hexagonal architecture is time-consuming and error-prone. You need to create controllers, services, repositories, DTOs, entities, mappers, and modules — all following specific patterns and best practices.
 
-**Hexogen solves this problem** by automatically generating all the boilerplate code needed for hexagonal architecture in NestJS applications. Instead of manually creating controllers, services, repositories, DTOs, entities, mappers, and modules, you can generate complete modules with a single command.
+**Hexogen solves this problem** by automatically generating complete, production-ready CRUD APIs with hexagonal architecture in NestJS applications. Instead of manually creating all the boilerplate code, you can generate entire API modules with a single command.
 
-> Let your NestJS app speak the language of hexagonal architecture — effortlessly.
+> Build CRUD APIs with hexagonal architecture — effortlessly and reliably.
 
 ## Perfect For
 
 ### 🎓 **Junior Developers**
 
-- **Learn by doing**: Generate proper hexagonal architecture without needing to understand all the concepts upfront
+- **Learn by doing**: Generate proper CRUD APIs with hexagonal architecture without needing to understand all the concepts upfront
 - **Best practices built-in**: All generated code follows industry standards and patterns
-- **Gradual learning**: Start with generated code and gradually understand the architecture as you work with it
-- **No architectural decisions**: Focus on business logic while the tool handles the structure
+- **Gradual learning**: Start with generated APIs and gradually understand the architecture as you work with it
+- **No architectural decisions**: Focus on business logic while the tool handles the API structure
 
 ### 🚀 **Developers Who Want Good Architecture Without Complexity**
 
 - **Simple setup**: No complex boilerplates with overwhelming configurations
 - **Minimal learning curve**: Get started immediately without weeks of setup and configuration
-- **Clean foundation**: Start with a clean NestJS project and add hexagonal architecture as needed
+- **Clean foundation**: Start with a clean NestJS project and add CRUD APIs with hexagonal architecture as needed
 - **No over-engineering**: Avoid advanced boilerplates that include features you don't need yet
 - **Gradual adoption**: Add architectural patterns incrementally as your project grows
 
@@ -33,7 +90,7 @@ Hexagonal Architecture (also known as Ports and Adapters) is a powerful architec
 
 - **Consistent structure**: Everyone follows the same patterns from day one
 - **Scalable foundation**: Start simple and scale up as your application grows
-- **Reduced setup time**: Get from zero to production-ready architecture in minutes, not days
+- **Reduced setup time**: Get from zero to production-ready CRUD APIs in minutes, not days
 - **Team productivity**: Spend time on features, not on architectural setup and configuration
 
 Hexogen bridges the gap between simple CRUD applications and enterprise-grade architecture, making professional patterns accessible to developers at all levels.
@@ -63,7 +120,7 @@ npm install reflect-metadata
 
 For a complete setup example with all prerequisites configured, check out our demo project:
 
-**[nestjs-hexogen-starter](https://github.com/dev-ahmadbilal/nestjs-hexogen-starter)** - A complete NestJS project with all required dependencies pre-configured, ready to use with hexogen for hexagonal architecture generation.
+**[nestjs-hexogen-starter](https://github.com/dev-ahmadbilal/nestjs-hexogen-starter)** - A complete NestJS project with all required dependencies pre-configured, ready to use with hexogen for CRUD API generation.
 
 This starter project includes:
 
@@ -73,7 +130,7 @@ This starter project includes:
 - ✅ Database connection examples
 - ✅ Ready-to-use project structure
 
-**No hexagonal architecture setup required** - just install hexogen and start generating resources. The package will automatically create the hexagonal architecture structure for you.
+**No hexagonal architecture setup required** - just install hexogen and start generating CRUD APIs. The package will automatically create the hexagonal architecture structure for you.
 
 ## About Hexagonal Architecture
 
@@ -471,13 +528,32 @@ hexogen/
 └── README.md
 ```
 
+## Inspiration
+
+Hexogen was inspired by the excellent implementation of hexagonal architecture in the **[realworld-nestjs-medium-blog](https://github.com/hhsadiq/realworld-nestjs-medium-blog)** project. This project demonstrates a complete Medium clone backend using NestJS, TypeORM, and hexagonal architecture patterns, serving as a real-world example of how these architectural principles can be applied to build production-ready APIs.
+
+The realworld-nestjs-medium-blog project showcases:
+- Complete CRUD operations with hexagonal architecture
+- TypeORM integration with PostgreSQL
+- Comprehensive testing (unit and E2E)
+- Swagger documentation
+- Docker and CI/CD setup
+- Real-world API patterns and best practices
+
+We've taken inspiration from this project's architectural decisions and patterns to create Hexogen, making it easier for developers to implement similar hexagonal architecture patterns in their own NestJS applications.
+
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes (add templates, improve CLI, etc.)
-4. Add tests if applicable
-5. Submit a pull request
+Please check out our [contributing guidelines](CONTRIBUTING.md) and get in touch!
+
+## Contact
+
+Please feel free to reach out:
+
+- **Email:** [ahmadbilal.3491@gmail.com](mailto:ahmadbilal.3491@gmail.com)
+- **LinkedIn:** [Ahmad Bilal](https://www.linkedin.com/in/dev-ahmad-bilal)
+
+I look forward to hearing from you!
 
 ## License
 
@@ -486,3 +562,14 @@ MIT
 ## Support
 
 For issues, questions and suggestions, please open an issue on the GitHub repository.
+
+[build-img]:https://github.com/dev-ahmadbilal/hexogen/actions/workflows/release.yml/badge.svg
+[build-url]:https://github.com/dev-ahmadbilal/hexogen/actions/workflows/release.yml
+[npm-img]:https://img.shields.io/npm/v/hexogen
+[npm-url]:https://www.npmjs.com/package/hexogen
+[issues-img]:https://img.shields.io/github/issues/dev-ahmadbilal/hexogen
+[issues-url]:https://github.com/dev-ahmadbilal/hexogen/issues
+[codecov-img]:https://codecov.io/gh/dev-ahmadbilal/hexogen/branch/main/graph/badge.svg
+[codecov-url]:https://codecov.io/gh/dev-ahmadbilal/hexogen
+[semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
+[semantic-release-url]:https://github.com/semantic-release/semantic-release
