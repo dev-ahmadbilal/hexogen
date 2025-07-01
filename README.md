@@ -405,6 +405,7 @@ Create a `.hexogen` folder in your project root with the following structure:
 ```
 
 **Template Categories:**
+
 - `generate/` - For generating new resources/modules
 - `property/` - For adding properties to existing modules
 - `generate-sub-entity/` - For generating sub-entities
@@ -412,6 +413,7 @@ Create a `.hexogen` folder in your project root with the following structure:
 - Any other category you prefer
 
 **Template Requirements:**
+
 - Each template must have a `prompt.js` file
 - Follow Hygen template structure and conventions
 - Use the same parameter names as built-in templates for consistency

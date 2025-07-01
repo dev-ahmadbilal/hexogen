@@ -368,19 +368,20 @@ function getCustomTemplates() {
 
   try {
     const categories = fs.readdirSync(customTemplatesDir);
-    
+
     for (const category of categories) {
       const categoryPath = path.join(customTemplatesDir, category);
       if (fs.statSync(categoryPath).isDirectory()) {
-        const templates = fs.readdirSync(categoryPath)
+        const templates = fs
+          .readdirSync(categoryPath)
           .filter((f) => fs.statSync(path.join(categoryPath, f)).isDirectory());
-        
+
         templates.forEach((template) => {
           customTemplates.push({
             category,
             name: template,
             path: path.join(categoryPath, template),
-            fullName: `${category}/${template}`
+            fullName: `${category}/${template}`,
           });
         });
       }
@@ -395,10 +396,8 @@ function getCustomTemplates() {
 function runCustomTemplate(templateName, args = []) {
   const customTemplates = getCustomTemplates();
   const [category, template] = templateName.split('/');
-  
-  const foundTemplate = customTemplates.find(t => 
-    t.category === category && t.name === template
-  );
+
+  const foundTemplate = customTemplates.find((t) => t.category === category && t.name === template);
 
   if (!foundTemplate) {
     console.log(chalk.red(`❌ Custom template not found: ${templateName}`));
@@ -408,7 +407,7 @@ function runCustomTemplate(templateName, args = []) {
   }
 
   console.log(chalk.blue(`🔧 Running custom template: ${templateName}`));
-  
+
   // Set up environment for custom template
   const customTemplatesPath = path.join(process.cwd(), '.hexogen');
   const hygenEnv = {
@@ -426,7 +425,7 @@ function runCustomTemplate(templateName, args = []) {
   try {
     // Write our own .hygen.js configuration for custom templates
     const normalizedTemplatesPath = customTemplatesPath.replace(/\\/g, '/');
-    
+
     fs.writeFileSync(
       tempHygenConfig,
       `module.exports = {
@@ -535,7 +534,7 @@ program
     }
 
     console.log(chalk.green('Available custom templates:'));
-    
+
     // Group by category
     const groupedTemplates = {};
     customTemplates.forEach((template) => {
@@ -567,7 +566,7 @@ program
     }
 
     const args = [];
-    
+
     // Add name parameter if provided
     if (options.name) {
       args.push('--name', options.name);
@@ -619,13 +618,13 @@ program
     console.log('  $ hexogen versioned User');
     console.log('  $ hexogen property');
     console.log('  $ hexogen list templates');
-    
+
     console.log(chalk.green('\nCustom Template Commands:'));
     console.log('  $ hexogen custom:list');
     console.log('  $ hexogen custom generate/my-template');
     console.log('  $ hexogen custom generate/my-template --name User');
     console.log('  $ hexogen custom generate/my-template --schema ./schemas/user.json');
-    
+
     console.log(chalk.green('\nUtility Commands:'));
     console.log('  $ hexogen help');
 

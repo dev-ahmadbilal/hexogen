@@ -349,4 +349,4 @@ describe('Hexogen Templates', () => {
       });
     });
   });
-}); 
+});
