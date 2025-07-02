@@ -138,7 +138,7 @@ This starter project includes:
 
 Hexogen generates code following **Hexagonal Architecture** (also known as Ports and Adapters), a powerful architectural pattern that provides excellent separation of concerns, testability, and maintainability.
 
-📖 **[Learn more about Hexagonal Architecture →](docs/hexagonal-architecture.md)**
+📖 **[Learn more about Hexagonal Architecture →](https://github.com/dev-ahmadbilal/hexogen/blob/main/docs/hexagonal-architecture.md)**
 
 ## Features
 
@@ -287,7 +287,7 @@ hexogen property
 
 To avoid interactive prompts, you can provide a JSON schema file using the `--schema` option. This allows for automated generation and CI/CD integration.
 
-📖 **[Learn how to generate schemas using AI tools →](docs/schema-generation.md)**
+📖 **[Learn how to generate schemas using AI tools →](https://github.com/dev-ahmadbilal/hexogen/blob/main/docs/schema-generation.md)**
 
 #### Resource Schema Format
 
