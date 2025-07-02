@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.2...v1.0.3) (2025-07-02)
+
+
+### Bug Fixes
+
+* include missing script folder ([ecbb141](https://github.com/dev-ahmadbilal/hexogen/commit/ecbb141acf33e540b4792520f269f7aa1ac24906))
+
 ## [1.0.2](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.1...v1.0.2) (2025-07-02)
 
 
