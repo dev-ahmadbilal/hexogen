@@ -589,7 +589,8 @@ program
 program
   .command('property')
   .description('Add a property to a module (e.g. hexogen property)')
-  .action(async () => {
+  .option('--no-prettier', 'Skip Prettier formatting after generation')
+  .action(async (options) => {
     const available = getAvailablePropertyTemplates();
 
     if (available.length === 0) {
@@ -601,7 +602,8 @@ program
     const template = available[0];
     console.log(chalk.blue(`Using property template: ${template}`));
     const hygenArgs = ['property', template];
-    const env = { USE_CUSTOM_TEMPLATES: 'false', SKIP_PRETTIER: 'true' };
+    const env = { USE_CUSTOM_TEMPLATES: 'false' };
+    env.SKIP_PRETTIER = options.prettier === false ? 'true' : 'false';
     runHygen(hygenArgs, env);
   });
 
