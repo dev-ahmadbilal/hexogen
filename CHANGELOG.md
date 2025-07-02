@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.1...v1.0.2) (2025-07-02)
+
+
+### Bug Fixes
+
+* include hygen helper file ([edce058](https://github.com/dev-ahmadbilal/hexogen/commit/edce058adcc8aea1fcc9b5b9368c4deb9ad1b291))
+
 ## [1.0.1](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.0...v1.0.1) (2025-07-02)
 
 
