@@ -11,6 +11,7 @@
     "templates/",
     "common/",
     "docs/",
+    "scripts/",
     "hygen-helper.js"
   ],
   "scripts": {
@@ -19,7 +20,7 @@
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose",
     "test:quick": "node bin/hexogen.js list templates",
-    "test:generate": "node bin/hexogen.js g relational-resource TestResource",
+    "test:generate": "node bin/hexogen.js resource TestResource",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -86,5 +87,5 @@
     "type": "git",
     "url": ""
   },
-  "postinstall": "echo 'Use hexogen g <template> <name> to generate CRUD APIs'"
+  "postinstall": "echo 'Use hexogen <template> <name> to generate CRUD APIs'"
 }
