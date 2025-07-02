@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.3...v1.0.4) (2025-07-02)
+
+
+### Bug Fixes
+
+* add property template ([645cbb5](https://github.com/dev-ahmadbilal/hexogen/commit/645cbb5c454436153d7817f7b1b8cd5198e74508))
+* property template imports ([ca7a549](https://github.com/dev-ahmadbilal/hexogen/commit/ca7a549f0ad4a2cb089f9dc306073aa2de463ffb))
+
 ## [1.0.3](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.2...v1.0.3) (2025-07-02)
 
 
