@@ -8,25 +8,56 @@ describe('Hexogen CLI', () => {
   const originalCwd = process.cwd();
 
   beforeAll(() => {
-    if (fs.existsSync(testDir)) {
-      fs.rmSync(testDir, { recursive: true, force: true });
+    // Clean up and recreate test directory
+    try {
+      if (fs.existsSync(testDir)) {
+        fs.rmSync(testDir, { recursive: true, force: true });
+      }
+    } catch (error) {
+      // Ignore cleanup errors
     }
-    fs.mkdirSync(testDir, { recursive: true });
+    
+    // Ensure test directory exists
+    if (!fs.existsSync(testDir)) {
+      fs.mkdirSync(testDir, { recursive: true });
+    }
   });
 
   afterAll(() => {
-    process.chdir(originalCwd);
+    try {
+      process.chdir(originalCwd);
+    } catch (error) {
+      // Ignore directory change errors in cleanup
+    }
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });
     }
   });
 
   beforeEach(() => {
-    process.chdir(testDir);
+    // Ensure test directory exists before changing to it
+    if (!fs.existsSync(testDir)) {
+      fs.mkdirSync(testDir, { recursive: true });
+    }
+    
+    // Verify directory exists and is accessible
+    if (!fs.existsSync(testDir)) {
+      throw new Error(`Test directory could not be created: ${testDir}`);
+    }
+    
+    try {
+      process.chdir(testDir);
+    } catch (error) {
+      throw new Error(`Failed to change directory to ${testDir}: ${error.message}`);
+    }
   });
 
   afterEach(() => {
-    process.chdir(originalCwd);
+    try {
+      process.chdir(originalCwd);
+    } catch (error) {
+      // Ignore directory change errors in cleanup
+    }
     if (fs.existsSync(path.join(testDir, 'src'))) {
       fs.rmSync(path.join(testDir, 'src'), { recursive: true, force: true });
     }
