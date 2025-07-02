@@ -9,7 +9,9 @@
   "files": [
     "bin/",
     "templates/",
-    "common/"
+    "common/",
+    "docs/",
+    "hygen-helper.js"
   ],
   "scripts": {
     "test": "jest",
