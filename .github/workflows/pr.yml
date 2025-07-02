@@ -4,4 +4,9 @@ on: [pull_request]
 
 jobs:
   build:
-    uses: dev-ahmadbilal/reuseble-workflows/.github/workflows/pr.yml@main
+    # Temporarily disabled for debugging
+    # uses: dev-ahmadbilal/reuseble-workflows/.github/workflows/pr.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug placeholder
+        run: echo "PR workflow temporarily disabled for debugging"
