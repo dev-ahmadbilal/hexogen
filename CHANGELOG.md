@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.0...v1.0.1) (2025-07-02)
+
+
+### Bug Fixes
+
+* unit tests ([375951c](https://github.com/dev-ahmadbilal/hexogen/commit/375951cf7384e71cba2ad12dcae99215885f3348))
+
 # 1.0.0 (2025-07-02)
 
 
