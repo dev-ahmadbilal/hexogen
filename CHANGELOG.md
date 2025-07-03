@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.4...v1.0.5) (2025-07-03)
+
+
+### Bug Fixes
+
+* formating issue after adding property ([cf10d7f](https://github.com/dev-ahmadbilal/hexogen/commit/cf10d7f1c3fa4e4313208efb3a2f2df5f4fa5be6))
+
 ## [1.0.4](https://github.com/dev-ahmadbilal/hexogen/compare/v1.0.3...v1.0.4) (2025-07-02)
 
 
