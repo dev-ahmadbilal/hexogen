@@ -11,6 +11,8 @@
 
 A CLI tool for generating **CRUD APIs with hexagonal architecture** in NestJS applications. Hexogen creates complete, production-ready APIs following hexagonal architecture patterns using Hygen templates.
 
+🎥 [Watch Hexogen in Action (5 min)](https://www.youtube.com/watch?v=EYkNrXWPYXo)
+
 ## Table of Contents
 
 - [Why Hexogen?](#why-hexogen)
